@@ -33,7 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     # Added SystemConfig to the INSTALLED_APPS in order for Django to
     # keep track of changes which will be added to models.py
-    'system.apps.SystemConfig'
+    'system.apps.SystemConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
