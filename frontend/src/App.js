@@ -9,7 +9,7 @@ import Footer from './Footer';
 import Alldoctors from './alldoctor'
 import LoginRoute from './LoginRoute'
 import RegisterRoute from './RegisterRoute'
-
+//import Transferpatient from './patient/Transferpatient
 function App() {
   return (
     <div>
@@ -30,7 +30,10 @@ function App() {
 }
 
 export default App;
-
+         // <Route
+         // path='/frontdesk'
+         // component={Transferpatient}
+         // />
 
 // render(){​​​​​
 //   return(
