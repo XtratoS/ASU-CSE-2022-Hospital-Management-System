@@ -1,5 +1,5 @@
 from django.db import models
-
+#batates
 
 class Person(models.Model):
 
