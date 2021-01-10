@@ -7,3 +7,7 @@ https://docs.google.com/document/d/15L-wkO-6GlTJzVfH_ffygFZIKcjI554MB_gtt7WvcuE/
 https://drive.google.com/file/d/1lmvOcRPp5GSUsE4gneNZ_uQyQ68ERbas/view?usp=sharing
 ### Phase 2
 https://docs.google.com/document/d/1MZNZ-5lhil49dlG5KFfYhevKaJS3sZgMC2Heb6HCH9A/edit?usp=sharing
+
+### TODO
+- We need to create a unique employee id for every employee
+- Create user groups and permissions: https://docs.djangoproject.com/en/3.1/topics/auth/default/
