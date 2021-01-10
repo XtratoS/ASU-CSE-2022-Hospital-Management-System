@@ -1,1 +1,1 @@
-web: gunicorn hospital_management_system.hospital_management_system.wsgi
+web: cd hospital_management_system && gunicorn hospital_management_system.wsgi
