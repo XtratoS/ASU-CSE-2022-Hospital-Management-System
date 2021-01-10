@@ -5,5 +5,6 @@ from . import views
 app_name = 'system'
 
 urlpatterns = [
+	path('doctors/',views.doctor_list),
 
 ]
