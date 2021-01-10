@@ -2,7 +2,7 @@ from django.shortcuts import HttpResponse, render
 
 """Home page"""
 def home_view(request):
-    return HttpResponse('home')
+    return render(request, 'build/index.html')
 
 """Register a new patient"""
 def register_view(request):
