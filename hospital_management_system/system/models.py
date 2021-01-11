@@ -46,8 +46,11 @@ class Appointment(models.Model):
     startTime  = models.TimeField('start time',default=datetime.time(8,0,0))
     is_booked  = models.BooleanField(default=False)
     is_payed   = models.BooleanField(default=False)
+    def get_doctor(self):
+        doctor = self.schedule.doctor
     class Meta:
         ordering = ['startTime']
+
 
 
 

@@ -13,18 +13,18 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated,AllowAny
 
 
-# def doctor_list(request):
-# 	if request.method == 'GET':
-# 		doc = Doctor.objects.all()
-# 		serializer = DoctorSerializer(doc,many=True)
-# 		return JsonResponse(serializer.data,safe=False)
-# 	elif request.method == 'POST':
-# 		data=JSONParser().parse(request)
-# 		serializer = DoctorSerializer(data=data)
-# 		if serializer.is_valid:
-# 			serializer.save()
-# 			return JsonResponse(serializer.data,status=201)
-# 		return JsonResponse(serializer.errors, status=400)
+def doctor_list(request):
+	if request.method == 'GET':
+		doc = Doctor.objects.all()
+		serializer = DoctorSerializer(doc,many=True)
+		return JsonResponse(serializer.data,safe=False)
+	elif request.method == 'POST':
+		data=JSONParser().parse(request)
+		serializer = DoctorSerializer(data=data)
+		if serializer.is_valid:
+			serializer.save()
+			return JsonResponse(serializer.data,status=201)
+		return JsonResponse(serializer.errors, status=400)
 
 def home_view(request):
     return HttpResponse('home')
@@ -43,6 +43,7 @@ def home_view(request):
 "phone_number":
 ""
 } '''
+
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def register_view(request):
@@ -64,6 +65,9 @@ def register_view(request):
 
 
 
+
+
+
     
 
 """Login as a patient or an employee"""
@@ -82,20 +86,72 @@ def register_view(request):
 # 			return JsonResponse(status=status.HTTP_404_NOT_FOUND)
 
 """Get logged in patient reports or a single one"""
+@api_view(["GET"])
+@csrf_exempt
+@permission_classes([IsAuthenticated])
 def reports_view(request):
-    pass
+	user = request.user
+	patient = user.person.patient
+	account = user.person.account_type
+	app = patient.medicalRecord.all()
+	serializers = MedicalRecordSerializer(app,many=True)
+	return JsonResponse(serializer.data,status=200)
+    
 
 """Add a new report"""
+'''assumes json 
+{
+	"patient_id":""
+	"doctor_describtion":""
+	"medical_problems":""
+} 
+'''
+@api_view(["POST"])
+@csrf_exempt
+@permission_classes([IsAuthenticated])
 def add_report_view(request):
-    pass
+	user = request.user
+	try:
+		staff = user.person.staffmember
+		data = request.data 
+		doctor_describtion = data["doctor_describtion"]
+		medical_problems = data["medical_problems"]
+		patient_id = data["patient_id"]
+		medicalRecord = MedicalRecord(patient=Patient.objects.get(pk=patient_id),doctor_describtion=doctor_describtion,medical_problems=medical_problems)
+		serializers = MedicalRecordSerializer(data=data)
+		if serializers.is_valid():
+			serializers.save()
+	except:
+		return JsonResponse(status= 404)
+
+
+
+
 
 """modify a report"""
+@api_view(["POST"])
+@csrf_exempt
+@permission_classes([IsAuthenticated])
 def edit_report_view(request):
-    pass
+	user = request.user
+	try:
+		staff = user.person.staffmember
+		request.data 
+		serializers = MedicalRecordSerializer(data=data)
+		if serializers.is_valid():
+			serializers.save()
+	except:
+		return JsonResponse(status= 404)
 
 """remove a report"""
+@api_view(["POST"])
+@csrf_exempt
+@permission_classes([IsAuthenticated])
 def delete_report_view(request):
     pass
+
+
+
 
 """Get logged in patient appointments or a single one"""
 
@@ -108,37 +164,59 @@ def appointments_view(request):
 	account = user.person.account_type
 	app = patient.appointments.all()
 	serializers = AppointmentSerializer(app,many=True)
-	return JsonResponse(serializer.data,)
+	return JsonResponse(serializer.data,status=200)
 	
 
 
 
 """Add a new appointment"""
+
 def add_appointment_view(request):
     pass
 
 """modify appointment"""
+@api_view(["POST"])
+@csrf_exempt
+@permission_classes([IsAuthenticated])
 def edit_appointment_view(request):
-    pass
+	data=JSONParser().parse(request)
+	serializer = AppointmentSerializer(data=data)
+	if serializer.is_valid():
+		serializer.save()
+	return JsonResponse(status=201)
 
 """remove appointment"""
+@api_view(["POST"])
+@csrf_exempt
+@permission_classes([IsAuthenticated])
 def delete_appointment_view(request):
-    pass
+	request.data
+	request.data["is_booked"]=False
+	request.data["patient"]=None
+	serializer = AppointmentSerializer(data=data)
+	if serializer.is_valid():
+		serializer.save()
+	return JsonResponse(status=200)
+
+
 
 """Get an employee's schedule"""
+@api_view(["GET","POST"])
+@csrf_exempt
 def schedule_view(request):
-    pass
+	data = request.data
+	pk = data["id"]
+	staff = StaffMember.objects.get(pk=pk)
+	serializer = ScheduleSerializer(staff)
+	return JsonResponse(serializer.data)
 
 """Get available services along with information about them"""
-
+@api_view(["GET","POST"])
+@csrf_exempt
 def Hospital_view(request):
 	hospital = Hospital.objects.filter(hospital_name__startswith ="HOSPITAL")
 	serializer = HospitalSerializer(hospital)
 	return JsonResponse(serializer.data,safe=False)
-
-
-	
-    
 
 """List all hospital employees"""
 @api_view(["GET"])
@@ -178,16 +256,21 @@ def show_employees_view(request):
 
     
 
-"""Get professional information for an employee"""
+"""Get professional information for an user"""
+# gets all the information about logged in user 
 @api_view(["GET"])
 @csrf_exempt
 @permission_classes([IsAuthenticated])
-def show_employee_information_view(request):
+def show_user_information_view(request):
 	user = request.user
 	account = user.person.account_type
 	pk = user.person.pk
 	try:
-		if account =="Doctor":
+		if account == "Patient":
+			patient = patient.objects.get(pk=pk)
+			serializer = PatientSerializer(patient)
+			return JsonResponse(serializer.data)
+		elif account =="Doctor":
 			doc = Doctor.objects.get(pk=pk)
 			serializer = DoctorSerializer(doc)
 			return JsonResponse(serializer.data)
@@ -218,40 +301,36 @@ def show_employee_information_view(request):
 	except:
 		return JsonResponse(status=status.HTTP_404_NOT_FOUND)
 
-
-    
-
 """Modify professional information for an employee"""
+# edits all the information about logged in user 
 @api_view(["POST"])
 @csrf_exempt
 @permission_classes([IsAuthenticated])
-def edit_employee_information_view(request):
+def edit_user_information_view(request):
 	user = request.user
 	account = user.person.account_type
 	pk = user.person.pk
 	data=JSONParser().parse(request)
 	try:
-		if account =="Doctor":
+		if account == "Patient":
+			serializer = PatientSerializer(data=data)
+		elif account =="Doctor":
 			serializer = DoctorSerializer(data=data,partial=True)
-			return JsonResponse(serializer.data,status=201)
 		elif account =="RadiologySpecialist":
 			serializer = RadiologySpecialistSerializer(data=data,partial=True)
-			return JsonResponse(serializer.data)
 		elif account =="LabSpecialist":
 			serializer = LabSpecialistSerializer(data=data,partial=True)
-			return JsonResponse(serializer.data)
 		elif account =="FinanceEmployee":
 			serializer = FinanceEmployeeSerializer(data=data,partial=True)
-			return JsonResponse(serializer.data)
 		elif account =="EmergencyEmployee":
 			serializer = EmergencyEmployeeSerializer(data=data,partial=True)
-			return JsonResponse(serializer.data)
 		elif account =="FrontdeskEmployee":
 			serializer = DoctorSerializer(data=data,partial=True)
-			return JsonResponse(serializer.data)
 		elif account =="HospitalManager":
 			serializer = DoctorSerializer(data=data,partial=True)
-			return JsonResponse(serializer.data)
+		if serializer.is_valid():
+			serializer.save()
+		return JsonResponse(serializer.data,status=201)
 	except:
 		return JsonResponse(serializer.errors, status=400)
 
