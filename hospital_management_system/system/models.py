@@ -54,7 +54,7 @@ class Appointment(models.Model):
 class MedicalRecord(models.Model):
     doctor_describtion = models.TextField(max_length=1000)
     medical_problems   = models.TextField(max_length=1000)
-    patient            = models.ForeignKey('Patient',on_delete=models.CASCADE)
+    patient            = models.ForeignKey('Patient',on_delete=models.CASCADE,null=True)
 
 
 class Schedule(models.Model):

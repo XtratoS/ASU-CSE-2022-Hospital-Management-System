@@ -10,19 +10,8 @@ from django.contrib.auth.decorators import login_required
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,AllowAny
 
-# Create your views here.
-# def get_first_available_doctor_appointments(self,specialization):
-#         doctors = Doctor.objects.filter(doctor__specialization=specialization)
-#         date = datetime.datetime.now()
-#         appointments=[]
-#         for doctor in doctors:
-#             while doc_appoint != 0:
-#                 doc_appoint = doctor.schdule.get_appointments(date=date, booked=False)
-#                 date = date.replace(day=date.day +1)
-#             docs_free_appointments.append(doc_appoint)
-#         for free_appoints in docs_free_appointments:
 
 # def doctor_list(request):
 # 	if request.method == 'GET':
@@ -55,7 +44,26 @@ def home_view(request):
 ""
 } '''
 @api_view(["POST"])
+@permission_classes([AllowAny])
 def register_view(request):
+	data = request.data
+	username = data["username"]
+	first_name = data["first_name"]
+	last_name = data["last_name"]
+	password1 = data["password1"]
+	password2 = data["password2"]
+	weight = data["weight"]
+	height = data["height"]
+	birthdate = data["birthdate"]
+	phone_number = data["phone_number"]
+	if password1 == password2:
+		user = User.create_user(username=username,first_name=first_name,last_name=last_name,password=password1)
+		user.save()
+		patient = Patient(birthday = birthdate,weight=weight,height=height,phoneNumber=phone_number,user=user,account_type="Patient")
+		patient.save()
+
+
+
     
 
 """Login as a patient or an employee"""
@@ -90,12 +98,13 @@ def delete_report_view(request):
     pass
 
 """Get logged in patient appointments or a single one"""
+
 @api_view(["GET"])
 @csrf_exempt
 @permission_classes([IsAuthenticated])
 def appointments_view(request):
-    user = request.user
-    patient = user.person.patient
+	user = request.user
+	patient = user.person.patient
 	account = user.person.account_type
 	app = patient.appointments.all()
 	serializers = AppointmentSerializer(app,many=True)
