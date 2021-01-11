@@ -66,3 +66,7 @@ def show_employee_information_view(request):
 """Modify professional information for an employee"""
 def edit_employee_information_view(request):
     pass
+
+"""Get professional information for an employee"""
+def show_doctor_view(request):
+    pass
