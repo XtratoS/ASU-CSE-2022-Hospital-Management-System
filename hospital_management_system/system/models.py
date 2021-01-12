@@ -66,3 +66,15 @@ class RadiologySpecialist(StaffMember):
 
 class LabSpecialist(StaffMember):
     pass
+class df2 (models.Model):
+    room = models.IntegerField(max_length = 1000)
+    type = models.IntegerField(max_length = 1000)
+    currcapacity = models.IntegerField(max_length = 1000)
+    maxcapacity = models.IntegerField(max_length = 1000)
+       
+class df1(models.Model):
+    jobtittle = models.CharField(max_length=1000)
+    workinghours =()   #mfrod a7na nktb 7aga fixed
+    salary =    #mfrod 7aga fixed 
+                    
+                                        

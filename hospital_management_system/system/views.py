@@ -70,3 +70,50 @@ def edit_employee_information_view(request):
 """Get professional information for an employee"""
 def show_doctor_view(request):
     pass
+def check(request):
+    aviroom = df2.objects.filter(type = reqtype)&(df2.objects.filter(currentcapacity<maxcapacity))
+
+    if 
+        len(aviroom) == 0
+         print("no room available")
+    else:
+    return (aviroom)    
+def allocate(room):
+    
+     
+     #df2[(df2.room)== room]["currentcapacity"] = df2[(df2.room)== room]["currentcapacity"]+1
+     # new = df2[(df2.room)== room]["currentcapacity"] old
+     new = df2.objects.filter(room = room)
+     new2 = new + 1
+     df2.loc[df2.room==room,'currentcapacity'] = new2 >>> 3yza as2l feha
+     #print(df2)
+     # writer = pd.ExcelWriter('E:/ room.xlsx')
+     # df2.to_excel(writer,sheet_name='Sheet1',index=False)
+     # writer.save()
+     print("successful allocation")
+    #print(df2[(df2.room) == room])
+#allocate(110)
+def transfer(curroom,nextroom):
+     #df2 = pd.read_excel(r'E:\ room.xlsx')
+     #newi = df2[(df2.room) == curroom]["currentcapacity"]
+     newi = df2.objects.filter(room=curroom)
+     newii = newi - 1
+     df2.loc[df2.room == curroom, 'currentcapacity'] = newii  >>so2l bardo
+     #newy = df2[(df2.room) == nextroom]["currentcapacity"]
+     newy=df2.objects.filter(room=nextroom)
+     newyy = newy + 1
+     df2.loc[df2.room == nextroom, 'currentcapacity'] = newyy
+    # df2.to_excel('E:\room.xlsx')
+     print("patient is sucessfully transferred")
+     # writer = pd.ExcelWriter('E:/ room.xlsx')
+     # df2.to_excel(writer, sheet_name='Sheet1',index=False)
+     # writer.save()
+     # print(df2)
+
+   def fine(jobtittle):
+    #df1 = pd.read_excel(r'E:\money.xlsx')
+    wh=df1[(df1.jobtittle==jobtittle)]["workinghours"]
+    wh=df1.objects.filter(jobtittle=jobtittle)
+    sa = df1[(df1.jobtittle == jobtittle)]["salary"]
+    sa=df1.objects.filter(jobtittle=jobtittle)
+    return wh,sa
