@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import {Link} from 'react-router-dom'
 import Input from './Input'
 
 class LoginForm extends Component {
@@ -24,22 +25,31 @@ class LoginForm extends Component {
     render() {
         return (
             <section className="entry">
-                <div className="entryTitle">Please enter your login information</div>
-                <form id="example2" method="POST">
-                    <Input
-                        placeholder="Email Address"
-                        type="email"
-                        name="user"
-                        updateParent={this.updateState}
-                    />
-                    <Input
-                        placeholder="Password"
-                        type="password"
-                        name="password"
-                        updateParent={this.updateState}
-                    />
-                    <button className="button_1" type="button" onClick={this.attemptLogin}>Log in</button>
-                </form>
+                <div className="entryTitle">Please enter your account information</div>
+                <div id="example2">
+                    <form method="POST">
+                        <Input
+                            placeholder="Email Address"
+                            type="email"
+                            name="user"
+                            updateParent={this.updateState}
+                        />
+                        <Input
+                            placeholder="Password"
+                            type="password"
+                            name="password"
+                            updateParent={this.updateState}
+                        />
+                        <div className="input-group">
+                            <button className="btn btn-primary" type="button" onClick={this.attemptLogin}>Log in</button>
+                        </div>
+                    </form>
+                    <span>Don't have an account?
+                        <Link to="/register">
+                            <span className="m-2">Register here</span>
+                        </Link>
+                    </span>
+                </div>
             </section>
         );
     }
