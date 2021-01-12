@@ -5,13 +5,11 @@ import datetime
 
 
 class Person(models.Model):
-    user         = models.OneToOneField(User, on_delete=models.CASCADE)
-    birthDay     = models.DateField('Birthday',default=None)
+    user         = models.OneToOneField(User, on_delete=models.CASCADE,null=True)
+    birthDay     = models.DateField('Birthday',default=None,null=True)
     phoneNumber  = models.PositiveBigIntegerField(default=0)
     account_type = models.CharField(max_length=20)
     # Abstract Class
-    # class Meta:
-    #     abstract = True
 
 
 
@@ -75,8 +73,10 @@ class Schedule(models.Model):
         return appointments
 
 class Patient(Person):
-    height = models.IntegerField()
-    weight = models.FloatField()
+    height = models.IntegerField(default=0)
+    weight = models.FloatField(default=0)
+
+
 
 
 
@@ -86,16 +86,14 @@ class StaffMember(Person):
     salary         = models.IntegerField(default=0)
     schedule       = models.OneToOneField('Schedule', on_delete=models.CASCADE,null=True)
     # Abstract class
-    class Meta:
-        abstract = True
-
 
 class HospitalManager(StaffMember):
     pass
 
 
 class Doctor(StaffMember):
-    department = models.CharField(default='',max_length=100)
+    department = models.ForeignKey('Department', on_delete=models.CASCADE,null=True)
+    patients = models.ForeignKey('Patient',on_delete=models.CASCADE,null=True)
 
 class FinanceEmployee(StaffMember):
     pass
