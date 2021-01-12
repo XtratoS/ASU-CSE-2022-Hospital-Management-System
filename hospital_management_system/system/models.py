@@ -33,8 +33,10 @@ class Department(models.Model):
 
 class Room(models.Model):
     hospital = models.ForeignKey('Hospital',on_delete=models.CASCADE,null=True)
-    current_capacity = models.IntegerField(default=0)
     max_capacity = models.IntegerField(default=1)
+    # This is a property that depends on relationship with another Model
+    def current_capacity(self):
+        return self.patient_set.all().count()
 
 
 class Appointment(models.Model):
@@ -74,6 +76,7 @@ class Schedule(models.Model):
 class Patient(Person):
     height = models.IntegerField(default=0)
     weight = models.FloatField(default=0)
+    room = models.ForeignKey(null=True, default=None)
 
 
 
