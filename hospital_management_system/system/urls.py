@@ -19,5 +19,5 @@ urlpatterns = [
     path('API/user/information/view', views.show_user_information_view),
     path('API/user/information/edit', views.edit_user_information_view),
     path('API/patient/add_report', views.add_report_view),
-
+    path('API/hospital/available_rooms', views.show_available_rooms_view),
 ]

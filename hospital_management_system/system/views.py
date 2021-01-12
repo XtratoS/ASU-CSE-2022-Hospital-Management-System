@@ -334,4 +334,11 @@ def edit_user_information_view(request):
 	except:
 		return JsonResponse(serializer.errors, status=400)
 
-    
+## Missing proper decorators to give permission to front desk agents only
+def show_available_rooms_view(request):
+	try:
+		available_rooms = hospital.objects.all().first()
+		serliazed_rooms = RoomSerializer(available_rooms)
+		return JsonResponse(serliazed_rooms)
+	except:
+		return JsonResponse(RoomSerializer(Room.objects.all()))

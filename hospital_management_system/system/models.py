@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-import datetime 
+import datetime
 
 
 class Person(models.Model):
@@ -20,6 +20,9 @@ class Person(models.Model):
 class Hospital(models.Model):
     hospital_manager = models.OneToOneField('HospitalManager',on_delete=models.CASCADE,null=True)
     hospital_name = models.CharField(max_length=50)
+    def getAvailableRooms(self):
+        available_rooms = self.room_set.filter(max_capacity__gt=models.F('current_capacity'))
+        return available_rooms.all()
 
 class Service(models.Model):
     hospital      = models.ForeignKey('Hospital',on_delete=models.CASCADE,null=True) 
@@ -32,14 +35,10 @@ class Department(models.Model):
 
 class Room(models.Model):
     hospital = models.ForeignKey('Hospital',on_delete=models.CASCADE,null=True)
-    is_taken = models.BooleanField(default=False)
     current_capacity = models.IntegerField(default=0)
     max_capacity = models.IntegerField(default=1)
 
 
-
-
-    
 class Appointment(models.Model):
     schedule   = models.ForeignKey('Schedule',related_name='appointments',on_delete=models.CASCADE)
     service    = models.OneToOneField('Service',on_delete=models.CASCADE,null=True)
@@ -52,9 +51,6 @@ class Appointment(models.Model):
         doctor = self.schedule.doctor
     class Meta:
         ordering = ['startTime']
-
-
-
 
 class MedicalRecord(models.Model):
     doctor_describtion = models.TextField(max_length=1000)
