@@ -108,4 +108,4 @@ class StaffMemberSerializer(serializers.ModelSerializer):
 
 class RoomSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = ['hospital', 'is_taken', 'current_capacity', 'maximum_capacity']
+        fields = ['hospital', 'current_capacity', 'maximum_capacity']
