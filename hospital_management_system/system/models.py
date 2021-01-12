@@ -33,6 +33,8 @@ class Department(models.Model):
 class Room(models.Model):
     hospital = models.ForeignKey('Hospital',on_delete=models.CASCADE,null=True)
     is_taken = models.BooleanField(default=False)
+    current_capacity = models.IntegerField(default=0)
+    max_capacity = models.IntegerField(default=1)
 
 
 
