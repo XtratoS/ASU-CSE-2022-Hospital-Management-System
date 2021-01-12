@@ -6,17 +6,28 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'first_name', 'last_name', 'email']
+class DepartmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Department
+        fields = ['id', 'department_name']  
 
 class ServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service
         fields = ['id', 'hospital', 'service_name', 'service_price']
+class ScheduleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Schedule
+        depth=2
+        fields = ['id','last_modified','appointments','start_time', 'end_time']    
 
 class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
         service = ServiceSerializer()
-        fields = ['id', 'service', 'patient','date','startTime','is_booked','is_payed']
+        schedule = ScheduleSerializer()
+        depth = 1
+        fields = ['id', 'service', 'staffmember','patient','date','startTime','is_booked','is_payed']
 
 class PatientSerializer(serializers.ModelSerializer):
     class Meta:
@@ -25,16 +36,12 @@ class PatientSerializer(serializers.ModelSerializer):
         depth = 1
         fields = ['id', 'user', 'weight', 'height','account_type','birthDay','phoneNumber','medicalrecord_set']  
 
-class ScheduleSerializer(serializers.ModelSerializer):
-    class Meta:
-        depth=1
-        model = Schedule
-        appointments = AppointmentSerializer()
-        fields = ['id', 'appointments','last_modified', 'start_time', 'end_time']     
+ 
 
 class DoctorSerializer(serializers.ModelSerializer):
     schedule = ScheduleSerializer()
     user     = UserSerializer()
+    department = DepartmentSerializer()
     class Meta:
         model = Doctor
         fields = ['id', 'user', 'salary', 'account_type','schedule','department','birthDay','phoneNumber']  
@@ -91,10 +98,7 @@ class HospitalSerializer(serializers.ModelSerializer):
         depth = 1
         fields = ['id', 'hospital_name', 'service_set','department_set']  
 
-class DepartmentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = HospitalManager
-        fields = ['id', 'department_name']  
+
 class StaffMemberSerializer(serializers.ModelSerializer):
     schedule = ScheduleSerializer()
     class Meta:

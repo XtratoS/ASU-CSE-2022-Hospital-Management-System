@@ -5,13 +5,11 @@ import datetime
 
 
 class Person(models.Model):
-    user         = models.OneToOneField(User, on_delete=models.CASCADE)
-    birthDay     = models.DateField('Birthday',default=None)
+    user         = models.OneToOneField(User, on_delete=models.CASCADE,null=True)
+    birthDay     = models.DateField('Birthday',default=None,null=True)
     phoneNumber  = models.PositiveBigIntegerField(default=0)
     account_type = models.CharField(max_length=20)
     # Abstract Class
-    # class Meta:
-    #     abstract = True
 
 
 
@@ -44,11 +42,12 @@ class Appointment(models.Model):
     service    = models.OneToOneField('Service',on_delete=models.CASCADE,null=True)
     patient    = models.ForeignKey('Patient',on_delete=models.CASCADE,null=True)
     date       = models.DateField('Appointment Date',default=None)
+    staffmember= models.ForeignKey('StaffMember',on_delete=models.CASCADE,null=True)
     startTime  = models.TimeField('start time',default=datetime.time(8,0,0))
     is_booked  = models.BooleanField(default=False)
     is_payed   = models.BooleanField(default=False)
     def get_doctor(self):
-        doctor = self.schedule.doctor
+        doctor = self.schedule.staffmember
     class Meta:
         ordering = ['startTime']
 
@@ -66,15 +65,17 @@ class Schedule(models.Model):
     def get_appointments(self,date=timezone.now(),booked=True):
         if self.appointments.count() == 0:
             for i in range(8):
-                self.appointments.create(date=date,startTime=datetime.time(self.start_time.hour+i,0,0))
-                self.appointments.create(date=date,startTime=datetime.time(self.start_time.hour+i,30,0))
+                self.appointments.create(date=date,startTime=datetime.time(self.start_time.hour+i,0,0),staffmember=self.staffmember)
+                self.appointments.create(date=date,startTime=datetime.time(self.start_time.hour+i,30,0),staffmember=self.staffmember)
             self.save()
         appointments = self.appointments.filter(date=date,is_booked=booked)
         return appointments
 
 class Patient(Person):
-    height = models.IntegerField()
-    weight = models.FloatField()
+    height = models.IntegerField(default=0)
+    weight = models.FloatField(default=0)
+
+
 
 
 
@@ -83,17 +84,15 @@ class Patient(Person):
 class StaffMember(Person):
     salary         = models.IntegerField(default=0)
     schedule       = models.OneToOneField('Schedule', on_delete=models.CASCADE,null=True)
+    department = models.ForeignKey('Department', on_delete=models.CASCADE,null=True)
     # Abstract class
-    class Meta:
-        abstract = True
-
 
 class HospitalManager(StaffMember):
     pass
 
 
 class Doctor(StaffMember):
-    department = models.CharField(default='',max_length=100)
+    patients = models.ForeignKey('Patient',on_delete=models.CASCADE,null=True)
 
 class FinanceEmployee(StaffMember):
     pass

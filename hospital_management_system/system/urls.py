@@ -7,10 +7,23 @@ app_name = 'system'
 urlpatterns = [
 	path('', views.home_view),
     # Patient
+    path('API/doctors/<str:dep>',views.doctor_list),
+
     path('API/patient/register', views.register_view),
+
+    
     path('API/patient/reports', views.reports_view),
+    path('API/patient/reports/add', views.add_report_view),
+    path('API/patient/reports/edit', views.edit_report_view),
+    path('API/patient/reports/delete/', views.delete_report_view),
+    path('API/patient/reports/deletebyid/<int:pk>', views.deleteByID_report_view),
+
+
     path('API/patient/appointments', views.appointments_view),
-    path('API/patient/appointments/add', views.add_appointment_view),
+    path('API/patient/appointments/book', views.book_appointment_view),
+    path('API/patient/appointments/edit', views.edit_appointment_view),
+    path('API/patient/appointments/delete', views.delete_appointment_view),
+
     path('API/hospital', views.Hospital_view),
     # Hospital Manage
     path('API/employees', views.show_employees_view),
