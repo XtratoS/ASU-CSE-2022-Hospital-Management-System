@@ -19,8 +19,9 @@ class Hospital(models.Model):
     hospital_manager = models.OneToOneField('HospitalManager',on_delete=models.CASCADE,null=True)
     hospital_name = models.CharField(max_length=50)
     def getAvailableRooms(self):
-        available_rooms = self.room_set.filter(max_capacity__gt=models.F('current_capacity'))
-        return available_rooms.all()
+        all_rooms = self.room_set.all()
+        available_rooms = [room for room in all_rooms if (room.current_capacity < room.max_capacity)]
+        return available_rooms
 
 class Service(models.Model):
     hospital      = models.ForeignKey('Hospital',on_delete=models.CASCADE,null=True) 
@@ -35,6 +36,7 @@ class Room(models.Model):
     hospital = models.ForeignKey('Hospital',on_delete=models.CASCADE,null=True)
     max_capacity = models.IntegerField(default=1)
     # This is a property that depends on relationship with another Model
+    @property
     def current_capacity(self):
         return self.patient_set.all().count()
 
@@ -76,7 +78,7 @@ class Schedule(models.Model):
 class Patient(Person):
     height = models.IntegerField(default=0)
     weight = models.FloatField(default=0)
-    room = models.ForeignKey(null=True, default=None)
+    room = models.ForeignKey("Room", null=True, default=None, on_delete=models.CASCADE)
 
 
 
