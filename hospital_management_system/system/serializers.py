@@ -2,6 +2,7 @@ from rest_framework import serializers
 from system.models import *
 from django.contrib.auth.models import User
 
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -117,7 +118,20 @@ class RoomSerializer(serializers.ModelSerializer):
 
         fields = ['hospital', 'is_taken', 'current_capacity', 'maximum_capacity']
 
+class salarySerializer(serializers.ModelSerializer):
+    user       = UserSerializer()
+    department = DepartmentSerializer()
+    class Meta:
+        model = StaffMember
+        depth = 1
+        fields = ['id','salary','user','department'] 
 
+class FeedBackSerializer(serializers.ModelSerializer):
+    doctor       = DoctorSerializer()
+    class Meta:
+        model = FeedBack
+        depth = 1
+        fields = ['id','feedback','staffmember']
 
 
 

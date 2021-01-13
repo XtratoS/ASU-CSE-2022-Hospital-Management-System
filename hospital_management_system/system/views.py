@@ -43,10 +43,10 @@ JSONresponce
         }
     }
 ]
-
-
-
 """
+
+
+
 @api_view(["GET"])
 @csrf_exempt
 @permission_classes([AllowAny])
@@ -72,7 +72,7 @@ def home_view(request):
 "phone_number":
 } '''
 '''
-tested with
+
 {
  "username":"aminatef33" ,
  "password1":"aminatef33" ,
@@ -481,7 +481,6 @@ def show_employees_view(request):
 	else:
 		return JsonResponse({"error":"unauthorized"},status=401)
 
-
 """Get professional information for an user"""
 # gets all the information about logged in user 
 @api_view(["GET"])
@@ -525,7 +524,7 @@ def show_user_information_view(request):
 			serializer = HospitalManagerSerializer(HospitalManager)
 			return JsonResponse(serializer.data)
 	except:
-		return JsonResponse(status=status.HTTP_404_NOT_FOUND)
+		return JsonResponse({},status=status.HTTP_404_NOT_FOUND)
 
 """Modify professional information for an employee"""
 # edits all the information about logged in user 
@@ -568,12 +567,172 @@ def edit_user_information_view(request):
 	except:
 		return JsonResponse(serializer.errors, status=400)
 
+@api_view(["GET"])
+@csrf_exempt
+@permission_classes([IsAuthenticated])
 def show_available_rooms_view(request):
 	try:
 		available_rooms = hospital.objects.all().first()
 		serliazed_rooms = RoomSerializer(available_rooms)
-		return JsonResponse(serliazed_rooms)
+		return JsonResponse(serliazed_rooms.data)
 	except:
-		return JsonResponse(RoomSerializer(Room.objects.all()))
+		return JsonResponse(RoomSerializer(Room.objects.all()).data)
+'''
+	{
+	"id": #room id
+	}
+'''
+@api_view(["POST"])
+@csrf_exempt
+@permission_classes([IsAuthenticated])
+
+def allocate_room_view(request):
+	data=JSONParser().parse(request)
+	try:
+		room = Room.objects.get(pk=data["id"])
+		room.current_capacity=1
+		room.save()
+		serliazed_rooms = RoomSerializer(room)
+		return JsonResponse(serliazed_rooms.data,status=200)
+	except:
+		return JsonResponse(data,status=404)
+
+'''get all employees salary '''
+'''
+returns 
+[
+ {"id": 1, "salary": 0, "user": {"id": 1, "username": "HospitalManager", "first_name": "", "last_name": "", "email": ""}, "department": null},
+ {"id": 2, "salary": 0, "user": {"id": 2, "username": "FinanceEmployee", "first_name": "", "last_name": "", "email": ""}, "department": null},
+ {"id": 3, "salary": 0, "user": {"id": 3, "username": "EmergencyEmployee", "first_name": "", "last_name": "", "email": ""}, "department": null},
+ {"id": 4, "salary": 0, "user": {"id": 4, "username": "FrontdeskEmployee", "first_name": "", "last_name": "", "email": ""}, "department": null},
+ {"id": 5, "salary": 1000, "user": {"id": 5, "username": "DOC0_TEST0", "first_name": "First0", "last_name": "last0", "email": "example@gmail.com"}, "department": {"id": 1, "department_name": "Cardiology"}},
+ {"id": 6, "salary": 1000, "user": {"id": 6, "username": "DOC1_TEST1", "first_name": "First1", "last_name": "last1", "email": "example@gmail.com"}, "department": {"id": 2, "department_name": "Diagnostic imaging"}},
+ {"id": 7, "salary": 1000, "user": {"id": 7, "username": "DOC2_TEST2", "first_name": "First2", "last_name": "last2", "email": "example@gmail.com"}, "department": {"id": 3, "department_name": "Ear nose and throat"}},
+ {"id": 8, "salary": 1000, "user": {"id": 8, "username": "DOC3_TEST3", "first_name": "First3", "last_name": "last3", "email": "example@gmail.com"}, "department": {"id": 4, "department_name": "General surgery"}},
+]
+
+'''
+@api_view(["GET"])
+@csrf_exempt
+@permission_classes([IsAuthenticated])
+def get_employees_salary(request):
+	if request.user.person.account_type =="FinanceEmployee":
+		staff = StaffMember.objects.all()
+		Serializer = salarySerializer(staff,many=True)
+		return JsonResponse(Serializer.data,safe=False,status=200,)
+	else:
+		return JsonResponse({},status=401)
+
+
+''' gets all feedback for the manager'''
+@api_view(["GET"])
+@csrf_exempt
+@permission_classes([IsAuthenticated])
+def show_all_feedback_view(request):
+	feedback = FeedBack.objects.all()
+	serializer = FeedBackSerializer(feedback,many=True)
+	return JsonResponse(serializer.data,safe=False,status=200)
+
+
+
+''' 
+assumes staff member is logged in 
+
+''' 
+@api_view(["GET"])
+@csrf_exempt
+@permission_classes([IsAuthenticated])
+def show_staff_feedback_view(request):
+	staff = request.user.person.staffmember
+	feedback = staff.feedback_set
+	serializer = FeedBackSerializer(feedback,many=True)
+	return JsonResponse(serializer.data,safe=False,status=200)
+
+
+''' 
+{
+	id:# id of the staffmember to be written in
+	feedback: 
+}
+'''
+@api_view(["POST"])
+@csrf_exempt
+@permission_classes([IsAuthenticated])
+def write_staff_feedback_view(request):
+	try:
+		data=JSONParser().parse(request)
+		staff = StaffMember.objects.get(pk = data["id"])
+		f = FeedBack(feedback = data["feedback"],staff_member=staff)
+		f.save()
+		Serializer = FeedBackSerializer(f)
+		return JsonResponse(serializer.data,status=200)
+	except:
+		return JsonResponse(data,status=400)
+
+
+'''
+{
+
+TAKES:
+ "phoneNumber":65 ,
+ "first_name":"" ,
+ "last_name":""
+}
+'''
+@api_view(["POST"])
+@csrf_exempt
+@permission_classes([IsAuthenticated])
+def emergency_patient_register_view(request):
+	data=JSONParser().parse(request)
+	try:
+		count = Patient.objects.all().count()
+		user  = User.objects.create_user(username = "tempPatient"+str(count),first_name=data["first_name"],last_name=data["last_name"])
+		patient = Patient(user = user,phoneNumber=data["phoneNumber"],account_type="tempPatient")
+		patient.save()
+		return JsonResponse(PatientSerializer(patient).data,status=200)
+	except:
+		return JsonResponse(data,status=400)
+
+
+@api_view(["GET"])
+@csrf_exempt
+@permission_classes([IsAuthenticated])
+def get_doctor_patients_views(request):
+	try:
+		staff = request.user.person.staffmember
+		serializer = PatientSerializer(staff.patients,many=True)
+		return JsonResponse(serializer.data,safe=False,status=200)
+	except:
+		return JsonResponse({},status=404)
+
+@api_view(["GET"])
+@csrf_exempt
+@permission_classes([IsAuthenticated])
+def get_patient_doctors_views(request):
+	try:
+		patient = request.user.person.patient
+		serializer = DoctorSerializer(patient.staffmember_set,many=True)
+		return JsonResponse(serializer.data,status=200,safe=False)
+
+
+	except:
+		return JsonResponse({},status=404)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     

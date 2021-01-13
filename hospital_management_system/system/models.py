@@ -90,7 +90,8 @@ class Patient(Person):
 class StaffMember(Person):
     salary         = models.IntegerField(default=0)
     schedule       = models.OneToOneField('Schedule', on_delete=models.CASCADE,null=True)
-    department = models.ForeignKey('Department', on_delete=models.CASCADE,null=True)
+    department     = models.ForeignKey('Department', on_delete=models.CASCADE,null=True)
+    patients       = models.ManyToManyField(Patient)
     # Abstract class
 
 class HospitalManager(StaffMember):
@@ -98,7 +99,7 @@ class HospitalManager(StaffMember):
 
 
 class Doctor(StaffMember):
-    patients = models.ForeignKey('Patient',on_delete=models.CASCADE,null=True)
+    pass
 
 class FinanceEmployee(StaffMember):
     pass
@@ -113,7 +114,7 @@ class FrontdeskEmployee(StaffMember):
 
 class FeedBack(models.Model):
     feedback = models.TextField(max_length=1000)
-    doctor = models.ForeignKey('Doctor',on_delete=models.CASCADE)
+    staff_member = models.ForeignKey('StaffMember',on_delete=models.CASCADE)
 
 
 class RadiologySpecialist(StaffMember):
