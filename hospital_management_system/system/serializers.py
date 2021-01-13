@@ -111,6 +111,11 @@ class StaffMemberSerializer(serializers.ModelSerializer):
         model = StaffMember
         depth = 2
         fields = ['id','schedule'] 
+class RoomSerializer(serializers.ModelSerializer):
+
+    class Meta:
+
+        fields = ['hospital', 'is_taken', 'current_capacity', 'maximum_capacity']
 
 
 

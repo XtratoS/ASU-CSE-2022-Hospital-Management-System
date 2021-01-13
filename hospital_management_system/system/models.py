@@ -14,6 +14,12 @@ class Person(models.Model):
 class Hospital(models.Model):
     hospital_manager = models.OneToOneField('HospitalManager',on_delete=models.CASCADE,null=True)
     hospital_name = models.CharField(max_length=50)
+    def getAvailableRooms(self):
+        available_rooms = self.room_set.filter(max_capacity__gt=models.F('current_capacity'))
+        return available_rooms.all()
+
+
+
 
 class Service(models.Model):
     hospital      = models.ForeignKey('Hospital',on_delete=models.CASCADE,null=True) 
