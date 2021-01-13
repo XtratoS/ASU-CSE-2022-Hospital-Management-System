@@ -112,10 +112,9 @@ class StaffMemberSerializer(serializers.ModelSerializer):
         depth = 2
         fields = ['id','schedule'] 
 class RoomSerializer(serializers.ModelSerializer):
-
     class Meta:
-
-        fields = ['hospital', 'is_taken', 'current_capacity', 'maximum_capacity']
+        model=Room
+        fields = ['hospital', 'is_taken', 'current_capacity', 'max_capacity']
 
 class salarySerializer(serializers.ModelSerializer):
     user       = UserSerializer()
@@ -126,11 +125,17 @@ class salarySerializer(serializers.ModelSerializer):
         fields = ['id','salary','user','department'] 
 
 class FeedBackSerializer(serializers.ModelSerializer):
-    doctor       = DoctorSerializer()
+    staff_member = StaffMemberSerializer()
     class Meta:
         model = FeedBack
-        depth = 1
-        fields = ['id','feedback','staffmember']
+        fields = ['id','feedback','staff_member','patient']
+class statisticsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Patient
+        fields = ['id','height','weight']
+
+
+        
 
 
 

@@ -41,9 +41,11 @@ urlpatterns = [
     path('API/user/information/edit', views.edit_user_information_view),
     path('API/patient/add_report', views.add_report_view),
     path('API/hospital/available_rooms', views.show_available_rooms_view),
-    path('API/hospital/rooms.allocate', views.allocate_room_view),
+    path('API/hospital/rooms/allocate', views.allocate_room_view),
     path('API/employee/finance/salary', views.get_employees_salary),
     path('API/employee/emergency/register', views.emergency_patient_register_view),
     path('API/employee/patients', views.get_doctor_patients_views),
+    path('API/employee/statistics', views.get_doctor_statistics),
+    
 
 ]

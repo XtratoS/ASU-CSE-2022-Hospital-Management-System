@@ -241,9 +241,13 @@ def deleteByID_report_view(request,pk):
 @csrf_exempt
 @permission_classes([IsAuthenticated])
 def appointments_view(request):
-	user = request.user
-	patient = user.person.patient
-	app = patient.appointment_set.all()
+	try:
+		user = request.user
+		patient = user.person.patient
+		app = patient.appointment_set.all()
+	except:
+		return Response(status=406)
+
 	serializer = AppointmentSerializer(app,many=True)
 	return Response(serializer.data,status=200)
 	
@@ -278,7 +282,7 @@ def book_appointment_view(request):
 		pk = request.user.person.patient.pk
 
 	except:
-	 	return Response(data,status=400)
+	 	return Response(data,status=406)
 
 	try:
 		app = Appointment.objects.get(pk=appID)
@@ -355,7 +359,7 @@ def delete_appointment_view(request):
 	id: #doctor/lab spcialst/radiology id
 } 
 '''
-@api_view(["GET","POST"])
+@api_view(["POST"])
 @csrf_exempt
 @permission_classes([IsAuthenticated])
 def schedule_view(request):
@@ -397,7 +401,7 @@ RETURNS
 def Hospital_view(request):
 	hospital = Hospital.objects.all()
 	serializer = HospitalSerializer(hospital[0])
-	return Response(serializer.data)
+	return Response(serializer.data,status=200)
 
 """List all hospital employees"""
 ''' {"Doctor": 
@@ -483,35 +487,28 @@ def show_user_information_view(request):
 		if account == "Patient":
 			patient = Patient.objects.get(pk=pk)
 			serializer = PatientSerializer(patient)
-			return Response(serializer.data)
 		elif account =="Doctor":
 			doc = Doctor.objects.get(pk=pk)
 			serializer = DoctorSerializer(doc)
-			return Response(serializer.data)
 		elif account =="RadiologySpecialist":
-			RadiologySpecialist = RadiologySpecialist.objects.get(pk=pk)
-			serializer = RadiologySpecialistSerializer(RadiologySpecialist)
-			return Response(serializer.data)
+			radio = RadiologySpecialist.objects.get(pk=pk)
+			serializer = RadiologySpecialistSerializer(radio)
 		elif account =="LabSpecialist":
-			LabSpecialist = LabSpecialist.objects.get(pk=pk)
-			serializer = LabSpecialistSerializer(LabSpecialist)
-			return Response(serializer.data)
+			lab = LabSpecialist.objects.get(pk=pk)
+			serializer = LabSpecialistSerializer(lab)
 		elif account =="FinanceEmployee":
-			FinanceEmployee = FinanceEmployee.objects.get(pk=pk)
-			serializer = FinanceEmployeeSerializer(FinanceEmployee)
-			return Response(serializer.data)
+			finance = FinanceEmployee.objects.get(pk=pk)
+			serializer = FinanceEmployeeSerializer(finance)
 		elif account =="EmergencyEmployee":
-			EmergencyEmployee = EmergencyEmployee.objects.get(pk=pk)
-			serializer = EmergencyEmployeeSerializer(EmergencyEmployee)
-			return Response(serializer.data)
+			emergency = EmergencyEmployee.objects.get(pk=pk)
+			serializer = EmergencyEmployeeSerializer(emergency)
 		elif account =="FrontdeskEmployee":
-			FrontdeskEmployee = FrontdeskEmployee.objects.get(pk=pk)
-			serializer = FrontdeskEmployeeSerializer(FrontdeskEmployee)
-			return Response(serializer.data)
+			frontdesk = FrontdeskEmployee.objects.get(pk=pk)
+			serializer = FrontdeskEmployeeSerializer(frontdesk)
 		elif account =="HospitalManager":
-			HospitalManager = HospitalManager.objects.get(pk=pk)
-			serializer = HospitalManagerSerializer(HospitalManager)
-			return Response(serializer.data)
+			hospitalmanger = HospitalManager.objects.get(pk=pk)
+			serializer = HospitalManagerSerializer(hospitalmanger)
+		return Response(serializer.data,status=200)
 	except:
 		return Response({},status=status.HTTP_404_NOT_FOUND)
 
@@ -530,42 +527,44 @@ def edit_user_information_view(request):
 			obj = Patient.objects.get(pk=pk)
 			serializer = PatientSerializer(obj,data=data,partial=True)
 		elif account =="Doctor":
-			obj = Patient.objects.get(pk=pk)
+			obj = Doctor.objects.get(pk=pk)
 			serializer = DoctorSerializer(obj,data=data,partial=True)
 		elif account =="RadiologySpecialist":
-			obj = Patient.objects.get(pk=pk)
+			obj = RadiologySpecialist.objects.get(pk=pk)
 			serializer = RadiologySpecialistSerializer(obj,data=data,partial=True)
 		elif account =="LabSpecialist":
-			obj = Patient.objects.get(pk=pk)
+			obj = LabSpecialist.objects.get(pk=pk)
 			serializer = LabSpecialistSerializer(obj,data=data,partial=True)
 		elif account =="FinanceEmployee":
-			obj = Patient.objects.get(pk=pk)
+			obj = FinanceEmployee.objects.get(pk=pk)
 			serializer = FinanceEmployeeSerializer(obj,data=data,partial=True)
 		elif account =="EmergencyEmployee":
-			obj = Patient.objects.get(pk=pk)
+			obj = EmergencyEmployee.objects.get(pk=pk)
 			serializer = EmergencyEmployeeSerializer(obj,data=data,partial=True)
 		elif account =="FrontdeskEmployee":
-			obj = Patient.objects.get(pk=pk)
+			obj = FrontdeskEmployee.objects.get(pk=pk)
 			serializer = DoctorSerializer(obj,data=data,partial=True)
 		elif account =="HospitalManager":
-			obj = Patient.objects.get(pk=pk)
+			obj = HospitalManager.objects.get(pk=pk)
 			serializer = DoctorSerializer(obj,data=data,partial=True)
 		if serializer.is_valid():
 			serializer.save()
-		return Response(serializer.data,status=201)
+			return Response(serializer.data,status=201)
 	except:
-		return Response(serializer.errors, status=400)
+		return Response({}, status=404)
+	return Response({}, status=404)
+
 
 @api_view(["GET"])
 @csrf_exempt
 @permission_classes([IsAuthenticated])
 def show_available_rooms_view(request):
 	try:
-		available_rooms = hospital.objects.all().first()
-		serliazed_rooms = RoomSerializer(available_rooms)
-		return Response(serliazed_rooms.data)
+		available_rooms = Hospital.objects.all().first().room_set.filter(current_capacity__gt =0)
+		serliazed_rooms = RoomSerializer(available_rooms,many=True)
+		return Response(serliazed_rooms.data,status=200)
 	except:
-		return Response(RoomSerializer(Room.objects.all()).data)
+		return Response(RoomSerializer(Room.objects.all()).data,status=404)
 '''
 	{
 	"id": #room id
@@ -579,7 +578,7 @@ def allocate_room_view(request):
 	data=JSONParser().parse(request)
 	try:
 		room = Room.objects.get(pk=data["id"])
-		room.current_capacity=1
+		room.current_capacity = 1
 		room.save()
 		serliazed_rooms = RoomSerializer(room)
 		return Response(serliazed_rooms.data,status=200)
@@ -608,7 +607,7 @@ def get_employees_salary(request):
 	if request.user.person.account_type =="FinanceEmployee":
 		staff = StaffMember.objects.all()
 		Serializer = salarySerializer(staff,many=True)
-		return Response(Serializer.data,safe=False,status=200,)
+		return Response(Serializer.data,status=200,)
 	else:
 		return Response({},status=401)
 
@@ -618,9 +617,12 @@ def get_employees_salary(request):
 @csrf_exempt
 @permission_classes([IsAuthenticated])
 def show_all_feedback_view(request):
-	feedback = FeedBack.objects.all()
-	serializer = FeedBackSerializer(feedback,many=True)
-	return Response(serializer.data,status=200)
+	try:
+		feedback = FeedBack.objects.all()
+		serializer = FeedBackSerializer(feedback,many=True)
+		return Response(serializer.data,status=200)
+	except:
+		return Response(status=404)
 
 
 
@@ -632,10 +634,14 @@ assumes staff member is logged in
 @csrf_exempt
 @permission_classes([IsAuthenticated])
 def show_staff_feedback_view(request):
-	staff = request.user.person.staffmember
-	feedback = staff.feedback_set
-	serializer = FeedBackSerializer(feedback,many=True)
-	return Response(serializer.data,status=200)
+	try:
+		staff = request.user.person.staffmember
+		feedback = staff.feedback_set
+		serializer = FeedBackSerializer(feedback,many=True)
+		return Response(serializer.data,status=200)
+	except:
+		return Response(status=404)
+
 
 
 ''' 
@@ -648,15 +654,30 @@ def show_staff_feedback_view(request):
 @csrf_exempt
 @permission_classes([IsAuthenticated])
 def write_staff_feedback_view(request):
+	patient = request.user.person.patient
 	try:
 		data=JSONParser().parse(request)
 		staff = StaffMember.objects.get(pk = data["id"])
-		f = FeedBack(feedback = data["feedback"],staff_member=staff)
+		f = FeedBack(feedback = data["feedback"],staff_member=staff,patient=patient)
 		f.save()
-		Serializer = FeedBackSerializer(f)
+		serializer = FeedBackSerializer(f)
 		return Response(serializer.data,status=200)
 	except:
 		return Response(data,status=400)
+@api_view(["GET"])
+@csrf_exempt
+@permission_classes([IsAuthenticated])
+def get_doctor_statistics(request):
+	try:
+		staff = request.user.person.staffmember
+		patients = staff.patients.all()
+		serializer = statisticsSerializer(patients,many=True)
+		return Response(serializer.data,status=200)		
+	except:
+		return Response(data,status=404)
+
+
+
 
 
 '''
@@ -690,7 +711,7 @@ def get_doctor_patients_views(request):
 	try:
 		staff = request.user.person.staffmember
 		serializer = PatientSerializer(staff.patients,many=True)
-		return Response(serializer.data,safe=False,status=200)
+		return Response(serializer.data,status=200)
 	except:
 		return Response({},status=404)
 

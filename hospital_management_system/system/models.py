@@ -36,9 +36,6 @@ class Room(models.Model):
     current_capacity = models.IntegerField(default=0)
     max_capacity = models.IntegerField(default=1)
 
-
-
-
     
 class Appointment(models.Model):
     schedule   = models.ForeignKey('Schedule',related_name='appointments',on_delete=models.CASCADE)
@@ -116,6 +113,7 @@ class FrontdeskEmployee(StaffMember):
 class FeedBack(models.Model):
     feedback = models.TextField(max_length=1000)
     staff_member = models.ForeignKey('StaffMember',on_delete=models.CASCADE)
+    patient = models.ForeignKey('Patient',on_delete=models.CASCADE)
 
 
 class RadiologySpecialist(StaffMember):
