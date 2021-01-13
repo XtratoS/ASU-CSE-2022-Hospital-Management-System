@@ -7,90 +7,90 @@ from random import random
 from math import floor
 
 # Create your tests here.
-class HospitalTestCase(TestCase):
+class API_TEST(TestCase):
 	def setUp(self):
 
-user = User.objects.create_user(username="HospitalManager")
-manager = HospitalManager.objects.create(account_type="HospitalManager",user=user)
-hospital = Hospital.objects.create(hospital_manager=manager,hospital_name="masr")
+		user = User.objects.create_user(username="HospitalManager",password="password")
+		manager = HospitalManager.objects.create(account_type="HospitalManager",user=user)
+		hospital = Hospital.objects.create(hospital_manager=manager,hospital_name="masr")
 
-dep =[ Department.objects.create(hospital=hospital,department_name="Cardiology"),
-	Department.objects.create(hospital=hospital,department_name="Diagnostic imaging"),
-	Department.objects.create(hospital=hospital,department_name="Ear nose and throat"),
-	Department.objects.create(hospital=hospital,department_name="General surgery"),
-	Department.objects.create(hospital=hospital,department_name="Microbiology"),
-	Department.objects.create(hospital=hospital,department_name="Neurology")]
+		dep =[ Department.objects.create(hospital=hospital,department_name="Cardiology"),
+			Department.objects.create(hospital=hospital,department_name="Diagnostic imaging"),
+			Department.objects.create(hospital=hospital,department_name="Ear nose and throat"),
+			Department.objects.create(hospital=hospital,department_name="General surgery"),
+			Department.objects.create(hospital=hospital,department_name="Microbiology"),
+			Department.objects.create(hospital=hospital,department_name="Neurology")]
 
-ser1 = Service.objects.create(hospital=hospital,service_name="book doctor appointment",service_price=100)
-ser2 = Service.objects.create(hospital=hospital,service_name="book lab test",service_price=100)
-ser3 = Service.objects.create(hospital=hospital,service_name="book radiology test",service_price=100)
+		ser1 = Service.objects.create(hospital=hospital,service_name="book doctor appointment",service_price=100)
+		ser2 = Service.objects.create(hospital=hospital,service_name="book lab test",service_price=100)
+		ser3 = Service.objects.create(hospital=hospital,service_name="book radiology test",service_price=100)
 
-for i in range(100):
-	Room.objects.create(hospital=hospital)
+		for i in range(100):
+			Room.objects.create(hospital=hospital)
 
-user = User.objects.create_user(username="FinanceEmployee")
-FinanceEmployee.objects.create(user=user,account_type="FinanceEmployee")
+		user = User.objects.create_user(username="FinanceEmployee",password="password")
+		FinanceEmployee.objects.create(user=user,account_type="FinanceEmployee")
 
-user = User.objects.create_user(username="EmergencyEmployee")
-EmergencyEmployee.objects.create(user=user,account_type="EmergencyEmployee")
+		user = User.objects.create_user(username="EmergencyEmployee",password="password")
+		EmergencyEmployee.objects.create(user=user,account_type="EmergencyEmployee")
 
-user = User.objects.create_user(username="FrontdeskEmployee")
-FrontdeskEmployee.objects.create(user=user,account_type="FrontdeskEmployee")
+		user = User.objects.create_user(username="FrontdeskEmployee",password="password")
+		FrontdeskEmployee.objects.create(user=user,account_type="FrontdeskEmployee")
 
-for i in range(5):
-	username='DOC'+str(i)+'_TEST'+str(i)
-	user = User.objects.create_user(username=username,password=username+'password')
-	user.first_name='First'+str(i)
-	user.last_name='last'+str(i)
-	user.email = 'example@gmail.com'
-	sch = Schedule()
-	sch.save()
-	doc = Doctor(department=dep[i],user=user,
-					  birthDay=timezone.now(),phoneNumber=00,schedule=sch,salary=1000,account_type="Doctor")
-	doc.save()
-	doc.schedule.get_appointments(booked=False)
-	doc.save()
-	user.save()
+		for i in range(5):
+			username='DOC'+str(i)+'_TEST'+str(i)
+			user = User.objects.create_user(username=username,password=username+'password')
+			user.first_name='First'+str(i)
+			user.last_name='last'+str(i)
+			user.email = 'example@gmail.com'
+			sch = Schedule()
+			sch.save()
+			doc = Doctor(department=dep[i],user=user,
+							  birthDay=timezone.now(),phoneNumber=00,schedule=sch,salary=1000,account_type="Doctor")
+			doc.save()
+			doc.schedule.get_appointments(booked=False)
+			doc.save()
+			user.save()
 
-username=['ahmed','mohamed','said_kanka','asm3el','ma7maden']
-for i in range(5):
-	user = User.objects.create_user(username=username[i],password=username[i]+'password')
-	patient = Patient(height=160,weight=70,user=user,
-					  birthDay=timezone.now(),phoneNumber=00,account_type="Patient")
-	patient.save()
-	patient.doctor_set.add(Doctor.objects.get(user__username__startswith="DOC"+str(i)))
-	FeedBack(doctor=Doctor.objects.get(user__username__startswith="DOC"+str(i)),feedback ="ffffeeeeddddback")
-	med=MedicalRecord(patient=patient,doctor_describtion="describtion",medical_problems="problems")
-	med.save()
-	user.save()
-	patient.save()
+		username=['ahmed','mohamed','said_kanka','asm3el','ma7maden']
+		for i in range(5):
+			user = User.objects.create_user(username=username[i],password=username[i]+'password')
+			patient = Patient(height=160,weight=70,user=user,
+							  birthDay=timezone.now(),phoneNumber=00,account_type="Patient")
+			patient.save()
+			patient.doctor_set.add(Doctor.objects.get(user__username__startswith="DOC"+str(i)))
+			FeedBack(doctor=Doctor.objects.get(user__username__startswith="DOC"+str(i)),feedback ="ffffeeeeddddback")
+			med=MedicalRecord(patient=patient,doctor_describtion="describtion",medical_problems="problems")
+			med.save()
+			user.save()
+			patient.save()
 
-for i in range(5):
-	username='LAB'+str(i)+'_TEST'+str(i)
-	user = User.objects.create_user(username=username,password=username+'password')
-	user.first_name='First'+str(i)
-	user.last_name='last'+str(i)
-	user.email = 'example@gmail.com'
-	sch = Schedule()
-	sch.save()
-	lab = LabSpecialist(user=user,
-					  birthDay=timezone.now(),phoneNumber=00,schedule=sch,salary=1000,account_type="LabSpecialist")
-	lab.save()
-	lab.schedule.get_appointments(booked=False)
-	lab.save()
-for i in range(5):
-	username='Radio'+str(i)+'_TEST'+str(i)
-	user = User.objects.create_user(username=username,password=username+'password')
-	user.first_name='First'+str(i)
-	user.last_name='last'+str(i)
-	user.email = 'example@gmail.com'
-	sch = Schedule()
-	sch.save()
-	radio = RadiologySpecialist(user=user,
-					  birthDay=timezone.now(),phoneNumber=00,schedule=sch,salary=1000,account_type="RadiologySpecialist")
-	radio.save()
-	radio.schedule.get_appointments(booked=False)
-	radio.save()	
+		for i in range(5):
+			username='LAB'+str(i)+'_TEST'+str(i)
+			user = User.objects.create_user(username=username,password=username+'password')
+			user.first_name='First'+str(i)
+			user.last_name='last'+str(i)
+			user.email = 'example@gmail.com'
+			sch = Schedule()
+			sch.save()
+			lab = LabSpecialist(user=user,
+							  birthDay=timezone.now(),phoneNumber=00,schedule=sch,salary=1000,account_type="LabSpecialist")
+			lab.save()
+			lab.schedule.get_appointments(booked=False)
+			lab.save()
+		for i in range(5):
+			username='Radio'+str(i)+'_TEST'+str(i)
+			user = User.objects.create_user(username=username,password=username+'password')
+			user.first_name='First'+str(i)
+			user.last_name='last'+str(i)
+			user.email = 'example@gmail.com'
+			sch = Schedule()
+			sch.save()
+			radio = RadiologySpecialist(user=user,
+							  birthDay=timezone.now(),phoneNumber=00,schedule=sch,salary=1000,account_type="RadiologySpecialist")
+			radio.save()
+			radio.schedule.get_appointments(booked=False)
+			radio.save()	
 
 
 

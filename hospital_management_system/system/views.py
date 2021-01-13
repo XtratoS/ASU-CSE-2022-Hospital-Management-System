@@ -6,7 +6,6 @@ from django.contrib.auth import authenticate,login,logout
 from system.models import *
 from system.serializers import *
 from django.http import Http404
-from django.contrib.auth.decorators import login_required
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -49,6 +48,7 @@ JSONresponce
 
 """
 @api_view(["GET"])
+@csrf_exempt
 @permission_classes([AllowAny])
 def doctor_list(request,dep):
 	doc = Doctor.objects.filter(department__department_name=dep)
@@ -175,7 +175,7 @@ def add_report_view(request):
 		medical_problems = data["medical_problems"]
 		patient_id = data["patient"]
 		medicalRecord = MedicalRecord(patient=Patient.objects.get(pk=patient_id),doctor_describtion=doctor_describtion,medical_problems=medical_problems)
-		serializers = MedicalRecordSerializer(data=data,partial=True)
+		serializers = MedicalRecordSerializer(medicalRecord)
 		if serializers.is_valid():
 			serializers.save()
 		return JsonResponse(serializers.data,status=201)
@@ -202,18 +202,20 @@ must be Authenticated and a staff member
 @permission_classes([IsAuthenticated])
 def edit_report_view(request):
 	user = request.user
-	try:
-		staff = user.person.staffmember
-		data=JSONParser().parse(request)
-		pk = data["id"]
-		record = MedicalRecord.objects.get(pk=pk)
-		record.doctor_describtion = data["doctor_describtion"]
-		record.medical_problems=data["medical_problems"]
-		record.save()
-		serializers = MedicalRecordSerializer(record)
-		return JsonResponse(serializers.data,status=201)
-	except:
-		return JsonResponse(request.data,status= 404)
+	#try:
+	staff = user.person.staffmember
+	data=JSONParser().parse(request)
+	pk = data["id"]
+	record = MedicalRecord.objects.get(pk=pk)
+	#record.doctor_describtion = data["doctor_describtion"]
+	#record.medical_problems=data["medical_problems"]
+	#record.save()
+	serializer = MedicalRecordSerializer(record,data,partial=True)
+	if serializer.is_valid():
+		serializer.save()
+	return JsonResponse(serializer.data,status=201)
+	#except:
+	#	return JsonResponse(data,status= 404)
 
 """remove a report"""
 @api_view(["POST","DELETE"])
@@ -322,7 +324,12 @@ exepecting something like this
 @csrf_exempt
 @permission_classes([IsAuthenticated])
 def edit_appointment_view(request):
-	serializer = AppointmentSerializer(data=request.data,partial=True)
+	data=JSONParser().parse(request)
+	try:
+		app = Appointment.objects.get(pk=data["id"])
+	except:
+		return JsonResponse(data,status=404)
+	serializer = AppointmentSerializer(app,data=data,partial=True)
 	if serializer.is_valid():
 		serializer.save()
 		return JsonResponse(serializer.data,status=201)
@@ -353,47 +360,118 @@ def delete_appointment_view(request):
 
 
 """Get an employee's schedule"""
+'''
+
+{
+	id: #doctor/lab spcialst/radiology id
+} 
+'''
 @api_view(["GET","POST"])
 @csrf_exempt
 @permission_classes([IsAuthenticated])
 def schedule_view(request):
 	data=JSONParser().parse(request)
 	pk = data["id"]
-	staff = StaffMember.objects.get(pk=pk)
+	try:
+		staff = StaffMember.objects.get(pk=pk)
+	except:
+		return JsonResponse(serializer.data,status=404)
+
 	serializer = ScheduleSerializer(staff.schedule)
-	return JsonResponse(serializer.data)
+	return JsonResponse(serializer.data,status=200)
 
 """Get available services along with information about them"""
-@api_view(["GET","POST"])
+
+'''
+RETURNS
+{
+"id": 1, 
+"hospital_name": "masr", 
+"service_set": [
+				{"id": 1, "service_name": "book doctor appointment", "service_price": 100, "hospital": 1},
+				{"id": 2, "service_name": "book lab test", "service_price": 100, "hospital": 1},
+				{"id": 3, "service_name": "book radiology test", "service_price": 100, "hospital": 1}
+			   ],
+"department_set": [
+ 					{"id": 1, "department_name": "Cardiology", "hospital": 1},
+ 					{"id": 2, "department_name": "Diagnostic imaging", "hospital": 1},
+ 					{"id": 3, "department_name": "Ear nose and throat", "hospital": 1},
+ 					{"id": 4, "department_name": "General surgery", "hospital": 1},
+ 					{"id": 5, "department_name": "Microbiology", "hospital": 1},
+ 					{"id": 6, "department_name": "Neurology", "hospital": 1}
+ 				   ]
+}
+ '''
+@api_view(["GET"])
 @csrf_exempt
+@permission_classes([AllowAny])
 def Hospital_view(request):
-	hospital = Hospital.objects.filter(hospital_name__startswith ="HOSPITAL")
-	serializer = HospitalSerializer(hospital)
-	return JsonResponse(serializer.data,safe=False)
+	hospital = Hospital.objects.all()
+	serializer = HospitalSerializer(hospital[0])
+	return JsonResponse(serializer.data)
 
 """List all hospital employees"""
+''' {"Doctor": 
+				[
+				{"id": 5,
+				 "user": {
+				 		  "id": 5,
+				 		  "first_name": "First0",
+				 	      "last_name": "last0",
+				 		  "email": "example@gmail.com"
+				 		 },
+				 "salary": 1000,
+				 "account_type": "Doctor",
+				 "department": {
+				 				 "id": 1,
+				 				 "department_name": "Cardiology"
+				 				},
+				 "birthDay": "2021-01-13",
+				 "phoneNumber": 0
+				 				},
+				{"id": 6, "user": {"id": 6, "first_name": "First1", "last_name": "last1", "email": "example@gmail.com"}, "salary": 1000, "account_type": "Doctor", "department": {"id": 2, "department_name": "Diagnostic imaging"}, "birthDay": "2021-01-13", "phoneNumber": 0}, 
+				{"id": 7, "user": {"id": 7, "first_name": "First2", "last_name": "last2", "email": "example@gmail.com"}, "salary": 1000, "account_type": "Doctor", "department": {"id": 3, "department_name": "Ear nose and throat"}, "birthDay": "2021-01-13", "phoneNumber": 0},
+				{"id": 8, "user": {"id": 8, "first_name": "First3", "last_name": "last3", "email": "example@gmail.com"}, "salary": 1000, "account_type": "Doctor", "department": {"id": 4, "department_name": "General surgery"}, "birthDay": "2021-01-13", "phoneNumber": 0},
+				{"id": 9, "user": {"id": 9, "first_name": "First4", "last_name": "last4", "email": "example@gmail.com"}, "salary": 1000, "account_type": "Doctor", "department": {"id": 5, "department_name": "Microbiology"}, "birthDay": "2021-01-13", "phoneNumber": 0}
+				], 
+	 "RadiologySpecialist": [{"id": 20, "user": {"id": 20, "first_name": "", "last_name": "", "email": ""}, "salary": 1000, "account_type": "RadiologySpecialist", "birthDay": "2021-01-13", "phoneNumber": 0}, {"id": 21, "user": {"id": 21, "first_name": "", "last_name": "", "email": ""}, "salary": 1000, "account_type": "RadiologySpecialist", "birthDay": "2021-01-13", "phoneNumber": 0}, {"id": 22, "user": {"id": 22, "first_name": "", "last_name": "", "email": ""}, "salary": 1000, "account_type": "RadiologySpecialist", "birthDay": "2021-01-13", "phoneNumber": 0}, {"id": 23, "user": {"id": 23, "first_name": "", "last_name": "", "email": ""}, "salary": 1000, "account_type": "RadiologySpecialist", "birthDay": "2021-01-13", "phoneNumber": 0}, {"id": 24, "user": {"id": 24, "first_name": "", "last_name": "", "email": ""}, "salary": 1000, "account_type": "RadiologySpecialist", "birthDay": "2021-01-13", "phoneNumber": 0}],
+	 "LabSpecialist": [{"id": 15, "user": {"id": 15, "first_name": "", "last_name": "", "email": ""}, "salary": 1000, "account_type": "LabSpecialist", "birthDay": "2021-01-13", "phoneNumber": 0}, {"id": 16, "user": {"id": 16, "first_name": "", "last_name": "", "email": ""}, "salary": 1000, "account_type": "LabSpecialist", "birthDay": "2021-01-13", "phoneNumber": 0}, {"id": 17, "user": {"id": 17, "first_name": "", "last_name": "", "email": ""}, "salary": 1000, "account_type": "LabSpecialist", "birthDay": "2021-01-13", "phoneNumber": 0}, {"id": 18, "user": {"id": 18, "first_name": "", "last_name": "", "email": ""}, "salary": 1000, "account_type": "LabSpecialist", "birthDay": "2021-01-13", "phoneNumber": 0}, {"id": 19, "user": {"id": 19, "first_name": "", "last_name": "", "email": ""}, "salary": 1000, "account_type": "LabSpecialist", "birthDay": "2021-01-13", "phoneNumber": 0}],
+
+	 "FinanceEmployee": [
+	 						{
+	 						  "id": 2,
+	 						  "user": {"id": 2, "first_name": "", "last_name": "", "email": ""},
+	 						  "account_type": "FinanceEmployee", 
+	 						  "salary": 0, 
+	 						  "birthDay": null,
+	 						  "phoneNumber": 0
+	 						 }
+	                    ],
+	 "EmergencyEmployee": [{"id": 3, "user": {"id": 3, "first_name": "", "last_name": "", "email": ""}, "salary": 0, "account_type": "EmergencyEmployee", "birthDay": null, "phoneNumber": 0}],
+	 "FrontdeskEmployee": [{"id": 4, "user": {"id": 4, "first_name": "", "last_name": "", "email": ""}, "account_type": "FrontdeskEmployee", "salary": 0, "birthDay": null, "phoneNumber": 0}]}
+'''
+
 @api_view(["GET"])
 @csrf_exempt
 @permission_classes([IsAuthenticated])
 def show_employees_view(request):
 	user = request.user
 	account = user.person.account_type
-	pk = user.person.pk
 	if account == "HospitalManager":
-		docs              = Doctor.objects.all()
-		lab               = LabSpecialist.objects.all()
-		radio             = RadiologySpecialist.objects.all()
-		FinanceEmployee   = FinanceEmployee.objects.all()
-		EmergencyEmployee = EmergencyEmployee.objects.all()
-		FrontdeskEmployee = FrontdeskEmployee.objects.all()
+		docs       = Doctor.objects.all()
+		lab        = LabSpecialist.objects.all()
+		radio      = RadiologySpecialist.objects.all()
+		fainance   = FinanceEmployee.objects.all()
+		emergency  = EmergencyEmployee.objects.all()
+		frontdesk  = FrontdeskEmployee.objects.all()
 
-		DoctorSerializer = DoctorSerializer(docs,many=True)
+		Serializer = DoctorSerializer(docs,many=True)
 		RadiologySpecialistserializer = RadiologySpecialistSerializer(radio,many=True)
 		LabSpecialistserializer = LabSpecialistSerializer(lab,many=True)
-		FinanceEmployeeserializer = FinanceEmployeeSerializer(FinanceEmployee,many=True)
-		EmergencyEmployeeserializer = EmergencyEmployeeSerializer(EmergencyEmployee,many=True)
-		FrontdeskEmployeeserializer = FrontdeskEmployeeSerializer(FrontdeskEmployee,many=True)
-		return JsonResponse({"Doctor":DoctorSerializer.data,
+		FinanceEmployeeserializer = FinanceEmployeeSerializer(fainance,many=True)
+		EmergencyEmployeeserializer = EmergencyEmployeeSerializer(emergency,many=True)
+		FrontdeskEmployeeserializer = FrontdeskEmployeeSerializer(frontdesk,many=True)
+		return JsonResponse({"Doctor":Serializer.data,
 		"RadiologySpecialist":RadiologySpecialistserializer.data,
 		"LabSpecialist":LabSpecialistserializer.data,
 		"FinanceEmployee":FinanceEmployeeserializer.data,
@@ -401,13 +479,8 @@ def show_employees_view(request):
 		"FrontdeskEmployee":FrontdeskEmployeeserializer.data
 		},status=201)
 	else:
-		return JsonResponse(status=status.HTTP_404_NOT_FOUND)
+		return JsonResponse({"error":"unauthorized"},status=401)
 
-
-
-
-
-    
 
 """Get professional information for an user"""
 # gets all the information about logged in user 
@@ -418,41 +491,41 @@ def show_user_information_view(request):
 	user = request.user
 	account = user.person.account_type
 	pk = user.person.pk
-	#try:
-	if account == "Patient":
-		patient = Patient.objects.get(pk=pk)
-		serializer = PatientSerializer(patient)
-		return JsonResponse(serializer.data)
-	elif account =="Doctor":
-		doc = Doctor.objects.get(pk=pk)
-		serializer = DoctorSerializer(doc)
-		return JsonResponse(serializer.data)
-	elif account =="RadiologySpecialist":
-		RadiologySpecialist = RadiologySpecialist.objects.get(pk=pk)
-		serializer = RadiologySpecialistSerializer(RadiologySpecialist)
-		return JsonResponse(serializer.data)
-	elif account =="LabSpecialist":
-		LabSpecialist = LabSpecialist.objects.get(pk=pk)
-		serializer = LabSpecialistSerializer(LabSpecialist)
-		return JsonResponse(serializer.data)
-	elif account =="FinanceEmployee":
-		FinanceEmployee = FinanceEmployee.objects.get(pk=pk)
-		serializer = FinanceEmployeeSerializer(FinanceEmployee)
-		return JsonResponse(serializer.data)
-	elif account =="EmergencyEmployee":
-		EmergencyEmployee = EmergencyEmployee.objects.get(pk=pk)
-		serializer = EmergencyEmployeeSerializer(EmergencyEmployee)
-		return JsonResponse(serializer.data)
-	elif account =="FrontdeskEmployee":
-		FrontdeskEmployee = FrontdeskEmployee.objects.get(pk=pk)
-		serializer = DoctorSerializer(FrontdeskEmployee)
-		return JsonResponse(serializer.data)
-	elif account =="HospitalManager":
-		HospitalManager = HospitalManager.objects.get(pk=pk)
-		serializer = DoctorSerializer(HospitalManager)
-		return JsonResponse(serializer.data)
-	#except:
-	#	return JsonResponse(status=status.HTTP_404_NOT_FOUND)
+	try:
+		if account == "Patient":
+			patient = Patient.objects.get(pk=pk)
+			serializer = PatientSerializer(patient)
+			return JsonResponse(serializer.data)
+		elif account =="Doctor":
+			doc = Doctor.objects.get(pk=pk)
+			serializer = DoctorSerializer(doc)
+			return JsonResponse(serializer.data)
+		elif account =="RadiologySpecialist":
+			RadiologySpecialist = RadiologySpecialist.objects.get(pk=pk)
+			serializer = RadiologySpecialistSerializer(RadiologySpecialist)
+			return JsonResponse(serializer.data)
+		elif account =="LabSpecialist":
+			LabSpecialist = LabSpecialist.objects.get(pk=pk)
+			serializer = LabSpecialistSerializer(LabSpecialist)
+			return JsonResponse(serializer.data)
+		elif account =="FinanceEmployee":
+			FinanceEmployee = FinanceEmployee.objects.get(pk=pk)
+			serializer = FinanceEmployeeSerializer(FinanceEmployee)
+			return JsonResponse(serializer.data)
+		elif account =="EmergencyEmployee":
+			EmergencyEmployee = EmergencyEmployee.objects.get(pk=pk)
+			serializer = EmergencyEmployeeSerializer(EmergencyEmployee)
+			return JsonResponse(serializer.data)
+		elif account =="FrontdeskEmployee":
+			FrontdeskEmployee = FrontdeskEmployee.objects.get(pk=pk)
+			serializer = FrontdeskEmployeeSerializer(FrontdeskEmployee)
+			return JsonResponse(serializer.data)
+		elif account =="HospitalManager":
+			HospitalManager = HospitalManager.objects.get(pk=pk)
+			serializer = HospitalManagerSerializer(HospitalManager)
+			return JsonResponse(serializer.data)
+	except:
+		return JsonResponse(status=status.HTTP_404_NOT_FOUND)
 
 """Modify professional information for an employee"""
 # edits all the information about logged in user 
@@ -466,21 +539,45 @@ def edit_user_information_view(request):
 	data=JSONParser().parse(request)
 	try:
 		if account == "Patient":
-			serializer = PatientSerializer(data=data)
+			obj = Patient.objects.get(pk=pk)
+			serializer = PatientSerializer(obj,data=data,partial=True)
+			if serializer.is_valid():
+				serializer.save()
 		elif account =="Doctor":
-			serializer = DoctorSerializer(data=data,partial=True)
+			obj = Patient.objects.get(pk=pk)
+			serializer = DoctorSerializer(obj,data=data,partial=True)
+			if serializer.is_valid():
+				serializer.save()
 		elif account =="RadiologySpecialist":
-			serializer = RadiologySpecialistSerializer(data=data,partial=True)
+			obj = Patient.objects.get(pk=pk)
+			serializer = RadiologySpecialistSerializer(obj,data=data,partial=True)
+			if serializer.is_valid():
+				serializer.save()
 		elif account =="LabSpecialist":
-			serializer = LabSpecialistSerializer(data=data,partial=True)
+			obj = Patient.objects.get(pk=pk)
+			serializer = LabSpecialistSerializer(obj,data=data,partial=True)
+			if serializer.is_valid():
+				serializer.save()
 		elif account =="FinanceEmployee":
-			serializer = FinanceEmployeeSerializer(data=data,partial=True)
+			obj = Patient.objects.get(pk=pk)
+			serializer = FinanceEmployeeSerializer(obj,data=data,partial=True)
+			if serializer.is_valid():
+				serializer.save()
 		elif account =="EmergencyEmployee":
-			serializer = EmergencyEmployeeSerializer(data=data,partial=True)
+			obj = Patient.objects.get(pk=pk)
+			serializer = EmergencyEmployeeSerializer(obj,data=data,partial=True)
+			if serializer.is_valid():
+				serializer.save()
 		elif account =="FrontdeskEmployee":
-			serializer = DoctorSerializer(data=data,partial=True)
+			obj = Patient.objects.get(pk=pk)
+			serializer = DoctorSerializer(obj,data=data,partial=True)
+			if serializer.is_valid():
+				serializer.save()
 		elif account =="HospitalManager":
-			serializer = DoctorSerializer(data=data,partial=True)
+			obj = Patient.objects.get(pk=pk)
+			serializer = DoctorSerializer(obj,data=data,partial=True)
+			if serializer.is_valid():
+				serializer.save()
 		if serializer.is_valid():
 			serializer.save()
 		return JsonResponse(serializer.data,status=201)
