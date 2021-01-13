@@ -7,6 +7,7 @@ from random import random
 from math import floor
 from rest_framework.test import APIRequestFactory
 from system.views import *
+from rest_framework.test import APIClient
 # Create your tests here.
 class API_TEST(TestCase):
 	def setUp(self):
@@ -25,7 +26,7 @@ class API_TEST(TestCase):
 		ser2 = Service.objects.create(hospital=hospital,service_name="book lab test",service_price=100)
 		ser3 = Service.objects.create(hospital=hospital,service_name="book radiology test",service_price=100)
 
-		for i in range(100):
+		for i in range(5):
 			Room.objects.create(hospital=hospital)
 
 		user = User.objects.create_user(username="FinanceEmployee",password="password")
@@ -37,7 +38,7 @@ class API_TEST(TestCase):
 		user = User.objects.create_user(username="FrontdeskEmployee",password="password")
 		FrontdeskEmployee.objects.create(user=user,account_type="FrontdeskEmployee")
 
-		for i in range(5):
+		for i in range(2):
 			username='DOC'+str(i)+'_TEST'+str(i)
 			user = User.objects.create_user(username=username,password=username+'password')
 			user.first_name='First'+str(i)
@@ -53,7 +54,7 @@ class API_TEST(TestCase):
 			user.save()
 
 		username=['TEST1','TEST122','TEST11','TEST22','TEST44']
-		for i in range(5):
+		for i in range(2):
 			user = User.objects.create_user(username=username[i],password=username[i])
 			patient = Patient(height=160,weight=70,user=user,
 							  birthDay=timezone.now(),phoneNumber=00,account_type="Patient")
@@ -65,7 +66,7 @@ class API_TEST(TestCase):
 			user.save()
 			patient.save()
 
-		for i in range(5):
+		for i in range(2):
 			username='LAB'+str(i)+'_TEST'+str(i)
 			user = User.objects.create_user(username=username,password=username+'password')
 			user.first_name='First'+str(i)
@@ -78,7 +79,7 @@ class API_TEST(TestCase):
 			lab.save()
 			lab.schedule.get_appointments(booked=False)
 			lab.save()
-		for i in range(5):
+		for i in range(2):
 			username='Radio'+str(i)+'_TEST'+str(i)
 			user = User.objects.create_user(username=username,password=username+'password')
 			user.first_name='First'+str(i)
@@ -92,66 +93,109 @@ class API_TEST(TestCase):
 			radio.schedule.get_appointments(booked=False)
 			radio.save()
 
-
-	factory = APIRequestFactory()
-	request = factory.post('/notes/', {'title': 'new idea'})	
-
 	#'API/doctors/<str:dep>'
-	def test_doctor_list(self):
-		factory = APIRequestFactory(enforce_csrf_checks=True)
-		request = factory.get('API/doctors/')
-		dep = Department.objects.all().first()
-		response = doctor_list(request,dep)
-		self.assertEqual(response.status_code,200)
+	# def test_doctor_list(self):
+	# 	factory = APIRequestFactory(enforce_csrf_checks=True)
+	# 	request = factory.get('API/doctors/')
+	# 	dep = Department.objects.all().first()
+	# 	response = doctor_list(request,dep)
+	# 	self.assertEqual(response.status_code,200)
 
-	#'API/patient/register'
-	def test_register_view(self):
-		factory = APIRequestFactory(enforce_csrf_checks=True)
-		data = {
-				 "username":"TEST33444" ,
-				 "password1":"TEST33" ,
-				 "password2":"TEST33" ,
-				 "weight":80 ,
-				 "height":175 , 
-				 "birthday":None,
-				 "phoneNumber":65 ,
-				 "first_name":"test" ,
-				 "last_name":"test"
-				}
-		request = factory.post('/API/patient/register/', data,format='json')
-		response = register_view(request)
-		self.assertEqual(response.status_code,201)
-		user = User.objects.get(username="TEST33444")
-		request = factory.post('/API/patient/register/', data,format='json')
-		response = register_view(request)
-		self.assertEqual(response.status_code,406)
-		data = {
-				 "username":"TEST1111" ,
-				 "password1":"4" ,
-				 "password2":"TEST33" ,
-				 "weight":80 ,
-				 "height":175 , 
-				 "phoneNumber":65 ,
-				 "first_name":"test" ,
-				 "last_name":"test"
-				}
-		request = factory.post('/API/patient/register/', data,format='json')
-		response = register_view(request)
-		self.assertEqual(response.status_code,406)
+	# #'API/patient/register'
+	# def test_register_view(self):
+	# 	factory = APIRequestFactory(enforce_csrf_checks=True)
+	# 	data = {
+	# 			 "username":"TEST33444" ,
+	# 			 "password1":"TEST33" ,
+	# 			 "password2":"TEST33" ,
+	# 			 "weight":80 ,
+	# 			 "height":175 , 
+	# 			 "birthday":None,
+	# 			 "phoneNumber":65 ,
+	# 			 "first_name":"test" ,
+	# 			 "last_name":"test"
+	# 			}
+	# 	request = factory.post('/API/patient/register/', data,format='json')
+	# 	response = register_view(request)
+	# 	self.assertEqual(response.status_code,201)
+	# 	user = User.objects.get(username="TEST33444")
+	# 	request = factory.post('/API/patient/register/', data,format='json')
+	# 	response = register_view(request)
+	# 	self.assertEqual(response.status_code,406)
+	# 	data = {
+	# 			 "username":"TEST1111" ,
+	# 			 "password1":"4" ,
+	# 			 "password2":"TEST33" ,
+	# 			 "weight":80 ,
+	# 			 "height":175 , 
+	# 			 "phoneNumber":65 ,
+	# 			 "first_name":"test" ,
+	# 			 "last_name":"test"
+	# 			}
+	# 	request = factory.post('/API/patient/register/', data,format='json')
+	# 	response = register_view(request)
+	# 	self.assertEqual(response.status_code,406)
 
-   # 'API/patient/reports'
-	def test_reports_view(self):
-		factory = APIRequestFactory(enforce_csrf_checks=True)
-		request = factory.get('API/patient/reports')
-		user = Patient.objects.all().first().user
+ #   # 'API/patient/reports'
+
+	# def test_reports_view(self):
+	# 	user = Patient.objects.all().first().user
+	# 	client = APIClient()
+	# 	client.force_authenticate(user=user)
+	# 	response = client.get('/API/patient/reports')
+	# 	self.assertEqual(response.status_code,200)
+
+
+
+
+
 
 		
-	# #'API/patient/reports/add'
-	# def test_add_report_view(self):
-	# 	pass
+	# #'/API/patient/reports/add'
+	def test_add_report_view(self):
+		user = Patient.objects.all().first().user
+		client = APIClient()
+		client.force_authenticate(user=user)
+		response = client.post('/API/patient/reports/add')
+		self.assertEqual(response.status_code,406)
+
+		user = Doctor.objects.all().first().user
+		client = APIClient()
+		client.force_authenticate(user=user)
+		pk = Patient.objects.all().first().id
+		data = {
+				"patient":pk,
+				"doctor_describtion":"test","medical_problems":"test"}
+
+		response = client.post('/API/patient/reports/add',data=data,format="json")
+		self.assertEqual(response.status_code,201)
+		
 	# #'API/patient/reports/edit'
-	# def test_edit_report_view(self):
-	# 	pass
+	def test_edit_report_view(self):
+		user = Doctor.objects.all().first().user
+		client = APIClient()
+		client.force_authenticate(user=user)
+		pk = Patient.objects.all().first().id
+		iD = MedicalRecord.objects.all().first().pk 
+		data = {
+				"id":iD,
+				"patient":pk,
+				"doctor_describtion":"test",
+				"medical_problems":"test"
+				}
+
+		response = client.post('/API/patient/reports/edit',data=data,format="json")
+		self.assertEqual(response.status_code,201)
+		data = {
+				"id":iD,
+				"patient":pk,
+				"medical_problems":"test"
+				}
+
+		response = client.post('/API/patient/reports/edit',data=data,format="json")
+		self.assertEqual(response.status_code,201)
+
+		
 	# #'API/patient/reports/delete'
 	# def test_delete_report_view(self):
 	# 	pass

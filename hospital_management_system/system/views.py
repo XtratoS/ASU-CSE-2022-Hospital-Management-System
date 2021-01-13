@@ -139,7 +139,7 @@ def reports_view(request):
 	patient = user.person.patient
 	app = MedicalRecord.objects.filter(patient__pk=patient.pk)
 	serializer = MedicalRecordSerializer(app,many=True)
-	return Response(serializer.data,status=200,safe=False)
+	return Response(serializer.data,status=200)
     
 
 """Add a new report"""
@@ -164,12 +164,12 @@ def add_report_view(request):
 		medical_problems = data["medical_problems"]
 		patient_id = data["patient"]
 		medicalRecord = MedicalRecord(patient=Patient.objects.get(pk=patient_id),doctor_describtion=doctor_describtion,medical_problems=medical_problems)
+		medicalRecord.save()
 		serializers = MedicalRecordSerializer(medicalRecord)
-		if serializers.is_valid():
-			serializers.save()
 		return Response(serializers.data,status=201)
 	except:
-		return Response(status= 404)
+		return Response(status= 406)
+	return Response(status=406)
 
 
 
@@ -245,7 +245,7 @@ def appointments_view(request):
 	patient = user.person.patient
 	app = patient.appointment_set.all()
 	serializer = AppointmentSerializer(app,many=True)
-	return Response(serializer.data,safe=False,status=200)
+	return Response(serializer.data,status=200)
 	
 
 """
@@ -288,7 +288,7 @@ def book_appointment_view(request):
 		app.is_booked=True
 		app.save()
 		serializer = AppointmentSerializer(app,partial=True)
-		return Response(serializer.data,safe=False,status=200)
+		return Response(serializer.data,status=200)
 	except:
 		return Response(data,status=404)
 
@@ -620,7 +620,7 @@ def get_employees_salary(request):
 def show_all_feedback_view(request):
 	feedback = FeedBack.objects.all()
 	serializer = FeedBackSerializer(feedback,many=True)
-	return Response(serializer.data,safe=False,status=200)
+	return Response(serializer.data,status=200)
 
 
 
@@ -635,7 +635,7 @@ def show_staff_feedback_view(request):
 	staff = request.user.person.staffmember
 	feedback = staff.feedback_set
 	serializer = FeedBackSerializer(feedback,many=True)
-	return Response(serializer.data,safe=False,status=200)
+	return Response(serializer.data,status=200)
 
 
 ''' 
@@ -701,7 +701,7 @@ def get_patient_doctors_views(request):
 	try:
 		patient = request.user.person.patient
 		serializer = DoctorSerializer(patient.staffmember_set,many=True)
-		return Response(serializer.data,status=200,safe=False)
+		return Response(serializer.data,status=200)
 	except:
 		return Response({},status=404)
 
