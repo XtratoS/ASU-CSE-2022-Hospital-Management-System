@@ -22,23 +22,23 @@ class addinfo extends Component {
     render()
     {
         return(
-            <div>
+            <div class="addinfoform">
                 <form>
-                    <h1>Fill your information here:</h1>
+                    <h1 class="headofinfo">Fill your information here:</h1>
                    <div>
-                    <label>Enter your name:</label>
+                    <label class="labelsofinfo">Enter your name:</label>
                     <input type="text" value={this.state.name} onChange={this.myChangeHandler} />
                     </div>
                     <div>
-                    <label>Enter your age:</label>
+                    <label class="labelsofinfo">Enter your age:</label>
                     <input type='text' value={this.state.age} onChange={this.myChangeHandler} />
                     </div>
                     <div>
-                    <label>Mention your previous experience:</label>
+                    <label class="labelsofinfo">Mention your previous experience:</label>
                     <input type='text' value={this.state.previouse} onChange={this.myChangeHandler} />
                     </div>
                     <div>
-                    <label>Enter your Graduation year:</label>
+                    <label class="labelsofinfo">Enter your Graduation year:</label>
                     <input type='text' value={this.state.graduationyear} onChange={this.myChangeHandler} />
                     </div>
                     <br /> <br />
