@@ -1,60 +1,71 @@
  
-*{
+.schedule *{
   box-sizing:border-box; 
 }
-body{
+
+.schedule body{
   margin: 0;
   padding: 0;
   font-family: sans-serif;
   background: #eeeff7;
   color: #fff;
 }
-.text-center{
+
+.schedule .text-center{
   color: #0d1b20;
   text-align: center;
 }
-.container{
+
+.schedule .container{
   width: 60%;
   margin: 10% auto;
 }
-.listitem{
+
+.schedule .listitem{
   background: #fff;
   color: #111427;
 }
-.listitem p{
+
+.schedule .listitem p{
   margin: 0;
   text-align: center;
   padding: 10px 0px;
   color: black;
 }
-.listitem span{
+
+.schedule .listitem span{
   display: inline-block;
   text-align: center;
   padding: 10px 0px;
   font-size: 20px;
   border: 0.3px solid #ccc;
 }
-.listitem span.title{
+
+.schedule .listitem span.title{
   background: #0d1b20;
   color: #fff;
 }
 
-.listitem span.name,
+.schedule .listitem span.name,
 form input[type=text]{
   width:60%;
 }
-.listitem span.date,
+
+.schedule .listitem span.date,
 form input[type=date]{
   width:30%;
 }
-.listitem span.action,form input[type=submit]{
+
+.schedule .listitem span.action,form input[type=submit]{
   width: 10%;
 }
-.listitem span.icon{
+
+.schedule .listitem span.icon{
   color: #f00;
   cursor: pointer;
 }
-form input{
+
+.schedule form input{
   padding: 10px;
   background: #fffdfd;
   border: transparent;
@@ -62,10 +73,10 @@ form input{
   color: black;
   margin: 0;
 }
-form input[type=submit]{
+
+.schedule form input[type=submit]{
   background: #dfe5e7;
   border:0.3px solid #17191a;
   color:black;
   cursor: pointer;
 }
-

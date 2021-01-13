@@ -9,7 +9,7 @@ const Scheduleitem =(props) =>{
          <div key={item.id}>
                <span className="name">{item.name}</span>
                <span className="date">{item.date}</span>
-               <span className="action" onClick={() =>deleteitem(item.id)}>&times;</span>
+               <span className="action" onClick={()=>deleteitem(item.id)}>&times;</span>
          </div>
       )
    }) :(<p>there is no item to show</p>)

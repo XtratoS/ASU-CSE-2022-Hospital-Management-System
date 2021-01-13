@@ -1,10 +1,10 @@
 import React , {Component} from 'react';
- import {BrowserRouter , Route, useRouteMatch} from 'react-router-dom';
- import Doctor from './components/doctor/doctor'
- import Form from "./components/form";
- import Scheduleitem from './components/Schedule/schedule-items'
- import Addschdule from './components/Schedule/addschedule'
- class Alldoctors extends Component{
+ import {Route} from 'react-router-dom';
+ import DoctorDashboardSidebar from './DoctorDashboardSidebar'
+//  import Form from "./form";
+ import Scheduleitem from '../components/Schedule/schedule-items'
+ import Addschdule from '../components/Schedule/addschedule'
+ class DoctorDashboard extends Component{
 
   state = {
     fields: {}
@@ -40,22 +40,26 @@ import React , {Component} from 'react';
     // let {path, url} = useRouteMatch();
     return(
       <div className= "App container">
-          <BrowserRouter> 
-          <Doctor/> 
-          <Route exact path='/myaccont' component={Form}/> 
-          <Route path='/myschedules' render={()=>{
+          {console.log(window.location)}
+          <DoctorDashboardSidebar/>
+          <Route path='/doctor/account' render={()=>{
             return(
               <div>
-                <h1 className="text-center">Schedule</h1> 
+                FORM
+                {/* <Form onChange={fields => this.onChange(fields)} /> */}
+              </div>
+            )
+          }}/> 
+          <Route path='/doctor/schedules' render={()=>{
+            return(
+              <div className="schedule">
+                <h1 className="text-center">Schedule</h1>
                 <Scheduleitem items={this.state.items} deleteitem={this.deleteitem} />
                 <Addschdule addItem={this.addItem}/>
               </div>
             )
           }}/>
-         </BrowserRouter>
-{/* 
-         <Form onChange={fields => this.onChange(fields)} /> */}
-          
+
          {/* <h1 className="text-center">Schedule</h1> 
          <Scheduleitem items={this.state.items} deleteitem={this.deleteitem} />
          <Addschdule addItem={this.addItem}/> */}
@@ -65,4 +69,4 @@ import React , {Component} from 'react';
     );
   }
 }
-export default Alldoctors;
+export default DoctorDashboard;
