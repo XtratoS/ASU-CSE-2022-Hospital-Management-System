@@ -11,10 +11,6 @@ class Person(models.Model):
     account_type = models.CharField(max_length=20)
     # Abstract Class
 
-
-
-
-
 class Hospital(models.Model):
     hospital_manager = models.OneToOneField('HospitalManager',on_delete=models.CASCADE,null=True)
     hospital_name = models.CharField(max_length=50)
@@ -31,6 +27,8 @@ class Department(models.Model):
 class Room(models.Model):
     hospital = models.ForeignKey('Hospital',on_delete=models.CASCADE,null=True)
     is_taken = models.BooleanField(default=False)
+    current_capacity = models.IntegerField(default=0)
+    max_capacity = models.IntegerField(default=1)
 
 
 
