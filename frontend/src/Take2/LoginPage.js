@@ -1,5 +1,5 @@
 import { Component } from 'react';
-// import {Link, Route, useRouteMatch} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import Input from './Input';
 
 class LoginPage extends Component {
@@ -25,8 +25,13 @@ class LoginPage extends Component {
 
     render() {
         return (
-            <div>
-                <div id="error"></div>
+            <div className="container-sm w-60">
+                <div className="form-title">
+                    Please enter your login information below
+                </div>
+                <div id="error-alert-wrapper">
+                    {this.state.error && <div className="alert alert-danger p-1">{this.state.error}</div>}
+                </div>
                 <Input
                     placeholder="Email Address"
                     type="email"
@@ -41,6 +46,11 @@ class LoginPage extends Component {
                 />
                 <div className="input-group">
                     <button className="btn btn-primary" type="button" onClick={this.attemptLogin}>Log in</button>
+                </div>
+                <div className="text-center">Don't have an account?
+                    <Link to="/register">
+                        <span className="m-2">Register here</span>
+                    </Link>
                 </div>
             </div>
         )

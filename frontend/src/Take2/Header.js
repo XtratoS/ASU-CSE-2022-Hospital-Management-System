@@ -1,19 +1,39 @@
-import React, { Component } from 'react'
+import {Link} from 'react-router-dom';
+import React, { Component } from 'react';
 
 class Header extends Component {
     render() {
         return (
             <header>
-                    <div id="head1">
+                    <div className="p-4">
                         <h1>Welcome to our Hospital Managment System</h1>
                     </div>
-                <nav className="main-nav">
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="index.html">About</a></li>
-                        <li><a href="index.html">Services</a></li>
+                    <ul class="nav justify-content-end bg-dark text-light">
+                        <li class="nav-item">
+                            <Link
+                                to="/login"
+                                className="text-decoration-none text-white"
+                            >
+                                <div class="nav-link">Login</div>
+                            </Link>
+                        </li>
+                        <li class="nav-item">
+                            <Link
+                                to="/services"
+                                className="text-decoration-none text-white"
+                            >
+                                <div class="nav-link">Servies</div>
+                            </Link>
+                        </li>
+                        {/* <li class="nav-item">
+                            <Link
+                                to="/about"
+                                className="text-decoration-none text-white"
+                            >
+                                <div class="nav-link">About</div>
+                            </Link>
+                        </li> */}
                     </ul>
-                </nav>
             </header>
         );
     }

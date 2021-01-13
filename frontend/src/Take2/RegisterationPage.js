@@ -39,7 +39,7 @@ class RegisterationForm extends Component {
         for (let field of ['firstname', 'lastname', 'user', 'password', 'password2']) {
             if (this.state[field] === '') {
                 empty = true;
-                error = 'Please fill in all the required fields';
+                error = 'Please fill in all the fields';
             }
         }
 
@@ -65,7 +65,10 @@ class RegisterationForm extends Component {
 
     render() {
         return (
-            <div className="form">
+            <div className="container-sm w-60">
+                <div className="form-title">
+                    You are signing up for a user account to access our services.
+                </div>
                 <div id="error-alert-wrapper">
                     {this.state.error && <div className="alert alert-danger p-1">{this.state.error}</div>}
                 </div>
@@ -107,11 +110,11 @@ class RegisterationForm extends Component {
                 <div className="input-group">
                     <button className="btn btn-primary" type="button" onClick={this.attemptRegister}>Register</button>
                 </div>
-                <span>Already have an account?
+                <div className="text-center">Already have an account?
                     <Link to="/login">
                         <span className="m-2">Login here</span>
                     </Link>
-                </span>
+                </div>
             </div>
         );
     }

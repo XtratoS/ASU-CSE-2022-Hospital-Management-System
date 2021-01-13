@@ -6,39 +6,41 @@ import '../App.css';
 import Header from './Header'
 import Showcase from './Showcase';
 import Footer from './Footer';
+import Services from './Services';
 import DoctorDashboard from './DoctorDashboard'
 
 function App() {
   return (
     <div>
+      <Header/>
       <Route
         exact path={`/`}
         render={()=>(
           <div>
-            <Header/>
             <Showcase/>
           </div>
         )}
       />
 
       <Route exact path={`/login`}>
-        <Header/>
         <Showcase/>
         <LoginPage/>
-        <Footer/>
       </Route>
 
       <Route exact path={`/register`}>
-        <Header/>
         <Showcase/>
         <RegisterationPage/>
-        <Footer/>
       </Route>
 
       <Route path={`/doctor`}>
         <DoctorDashboard/>
       </Route>
 
+      <Route path={`/services`}>
+        <Services/>
+      </Route>
+
+      <Footer/>
     </div>
   );
 }
