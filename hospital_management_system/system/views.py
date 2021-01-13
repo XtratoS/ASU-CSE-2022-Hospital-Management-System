@@ -541,49 +541,33 @@ def edit_user_information_view(request):
 		if account == "Patient":
 			obj = Patient.objects.get(pk=pk)
 			serializer = PatientSerializer(obj,data=data,partial=True)
-			if serializer.is_valid():
-				serializer.save()
 		elif account =="Doctor":
 			obj = Patient.objects.get(pk=pk)
 			serializer = DoctorSerializer(obj,data=data,partial=True)
-			if serializer.is_valid():
-				serializer.save()
 		elif account =="RadiologySpecialist":
 			obj = Patient.objects.get(pk=pk)
 			serializer = RadiologySpecialistSerializer(obj,data=data,partial=True)
-			if serializer.is_valid():
-				serializer.save()
 		elif account =="LabSpecialist":
 			obj = Patient.objects.get(pk=pk)
 			serializer = LabSpecialistSerializer(obj,data=data,partial=True)
-			if serializer.is_valid():
-				serializer.save()
 		elif account =="FinanceEmployee":
 			obj = Patient.objects.get(pk=pk)
 			serializer = FinanceEmployeeSerializer(obj,data=data,partial=True)
-			if serializer.is_valid():
-				serializer.save()
 		elif account =="EmergencyEmployee":
 			obj = Patient.objects.get(pk=pk)
 			serializer = EmergencyEmployeeSerializer(obj,data=data,partial=True)
-			if serializer.is_valid():
-				serializer.save()
 		elif account =="FrontdeskEmployee":
 			obj = Patient.objects.get(pk=pk)
 			serializer = DoctorSerializer(obj,data=data,partial=True)
-			if serializer.is_valid():
-				serializer.save()
 		elif account =="HospitalManager":
 			obj = Patient.objects.get(pk=pk)
 			serializer = DoctorSerializer(obj,data=data,partial=True)
-			if serializer.is_valid():
-				serializer.save()
 		if serializer.is_valid():
 			serializer.save()
 		return JsonResponse(serializer.data,status=201)
 	except:
 		return JsonResponse(serializer.errors, status=400)
-		
+
 def show_available_rooms_view(request):
 	try:
 		available_rooms = hospital.objects.all().first()
