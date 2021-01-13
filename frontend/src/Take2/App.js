@@ -38,6 +38,7 @@ function App() {
       <Route path={`/doctor`}>
         <DoctorDashboard/>
       </Route>
+      
 
     </div>
   );
