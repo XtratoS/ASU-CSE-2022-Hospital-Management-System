@@ -25,7 +25,6 @@ class ScheduleSerializer(serializers.ModelSerializer):
 
 class AppointmentSerializer(serializers.ModelSerializer):
     service = ServiceSerializer()
-    schedule = ScheduleSerializer()
     class Meta:
         model = Appointment
         fields = ['id', 'service', 'staffmember','patient','date','startTime','is_booked','is_payed']

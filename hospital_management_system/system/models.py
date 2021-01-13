@@ -51,6 +51,7 @@ class Appointment(models.Model):
     is_payed   = models.BooleanField(default=False)
     def get_doctor(self):
         doctor = self.schedule.staffmember
+        return doctor
     class Meta:
         ordering = ['startTime']
 
