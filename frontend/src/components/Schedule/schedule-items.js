@@ -6,18 +6,20 @@ const Scheduleitem =(props) =>{
 
    const Listitem = lenghth ? items.map(item =>{
       return(
-         <div key={item.id}>
-               <span className="name">{item.name}</span>
+         <div key={item.starttime}>
                <span className="date">{item.date}</span>
-               <span className="action" onClick={()=>deleteitem(item.id)}>&times;</span>
+               <span className="time">{item.starttime}</span>
+               <span className="time">{item.endtime}</span>
+               <span className="action" onClick={() =>deleteitem(item.starttime)}>&times;</span>
          </div>
       )
    }) :(<p>there is no item to show</p>)
    return(
       <div className="listitem">
          <div>
-            <span className="name title">Name</span>
             <span className="date title">date</span>
+            <span className="time title">start time</span>
+            <span className="time title">end time</span>
             <span className="action title">Action</span>
          </div>
          {Listitem}
@@ -25,3 +27,4 @@ const Scheduleitem =(props) =>{
    )
 }
 export default Scheduleitem;
+
