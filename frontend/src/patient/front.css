@@ -1,0 +1,21 @@
+.patiententer{
+    font-weight: bold;
+    text-decoration:underline;
+    font-size: 14px;
+
+}
+.transferbox{
+    margin-top:0;
+    padding: 10 px;
+    border:5 px solid rgb(59, 75, 78);
+    text-align: center;
+}
+.patientname {
+    font-weight: bold;
+    text-decoration:underline;
+    font-size: 14px;
+   
+}
+.b1{
+    float:center;
+}
