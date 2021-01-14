@@ -56,7 +56,7 @@ def doctor_list(request,dep):
 	return Response(serializer.data,status=200)
 	
 def home_view(request):
-    return HttpResponse('home')
+    return render(request, 'build/index.html')
 
 """Register a new patient"""
 #assuming json like this 
@@ -560,7 +560,7 @@ def edit_user_information_view(request):
 @permission_classes([IsAuthenticated])
 def show_available_rooms_view(request):
 	try:
-		available_rooms = Hospital.objects.all().first().room_set.filter(current_capacity__gt =0)
+		available_rooms = Hospital.objects.all().first().room_set.filter(current_capacity__lt =1)
 		serliazed_rooms = RoomSerializer(available_rooms,many=True)
 		return Response(serliazed_rooms.data,status=200)
 	except:

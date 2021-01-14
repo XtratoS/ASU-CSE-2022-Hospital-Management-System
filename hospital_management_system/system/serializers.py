@@ -39,13 +39,13 @@ class PatientSerializer(serializers.ModelSerializer):
  
 
 class DoctorSerializer(serializers.ModelSerializer):
-    #schedule = ScheduleSerializer()
+    schedule = ScheduleSerializer()
     user     = UserSerializer()
     department = DepartmentSerializer()
     class Meta:
         model = Doctor
         read_only_fields = ['user','department']
-        fields = ['id', 'user', 'salary', 'account_type','department','birthDay','phoneNumber']  
+        fields = ['id', 'user', 'salary', 'account_type','department','birthDay','phoneNumber', 'schedule']  
 
 class MedicalRecordSerializer(serializers.ModelSerializer):
     class Meta:
@@ -114,7 +114,7 @@ class StaffMemberSerializer(serializers.ModelSerializer):
 class RoomSerializer(serializers.ModelSerializer):
     class Meta:
         model=Room
-        fields = ['hospital', 'is_taken', 'current_capacity', 'max_capacity']
+        fields = ['hospital', 'id', 'is_taken', 'current_capacity', 'max_capacity']
 
 class salarySerializer(serializers.ModelSerializer):
     user       = UserSerializer()

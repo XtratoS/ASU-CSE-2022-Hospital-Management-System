@@ -1,0 +1,29 @@
+{
+  "files": {
+    "main.css": "/static/css/main.aab7cfe8.chunk.css",
+    "main.js": "/static/js/main.412f1e54.chunk.js",
+    "main.js.map": "/static/js/main.412f1e54.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.dbbb1561.js",
+    "runtime-main.js.map": "/static/js/runtime-main.dbbb1561.js.map",
+    "static/js/2.5888f61d.chunk.js": "/static/js/2.5888f61d.chunk.js",
+    "static/js/2.5888f61d.chunk.js.map": "/static/js/2.5888f61d.chunk.js.map",
+    "static/js/3.f93cc240.chunk.js": "/static/js/3.f93cc240.chunk.js",
+    "static/js/3.f93cc240.chunk.js.map": "/static/js/3.f93cc240.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/main.aab7cfe8.chunk.css.map": "/static/css/main.aab7cfe8.chunk.css.map",
+    "static/js/2.5888f61d.chunk.js.LICENSE.txt": "/static/js/2.5888f61d.chunk.js.LICENSE.txt",
+    "static/media/index.css": "/static/media/bg.bbef9339.jpeg",
+    "static/media/cardiology_department.e77af2dd.png": "/static/media/cardiology_department.e77af2dd.png",
+    "static/media/dental_department.9ea55ac8.png": "/static/media/dental_department.9ea55ac8.png",
+    "static/media/lab_service.4cc38f2c.png": "/static/media/lab_service.4cc38f2c.png",
+    "static/media/obgyn_department.0e98e189.png": "/static/media/obgyn_department.0e98e189.png",
+    "static/media/optical_department.8017f3f6.png": "/static/media/optical_department.8017f3f6.png",
+    "static/media/radiology_service.7ec75860.png": "/static/media/radiology_service.7ec75860.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.dbbb1561.js",
+    "static/js/2.5888f61d.chunk.js",
+    "static/css/main.aab7cfe8.chunk.css",
+    "static/js/main.412f1e54.chunk.js"
+  ]
+}

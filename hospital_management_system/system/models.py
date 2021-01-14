@@ -7,7 +7,7 @@ import datetime
 class Person(models.Model):
     user         = models.OneToOneField(User, on_delete=models.CASCADE,null=True)
     birthDay     = models.DateField('Birthday',default=None,null=True)
-    phoneNumber  = models.PositiveBigIntegerField(default=0)
+    phoneNumber  = models.CharField(max_length=11)
     account_type = models.CharField(max_length=20)
     # Abstract Class
 
@@ -29,6 +29,9 @@ class Service(models.Model):
 class Department(models.Model):
     department_name = models.CharField(max_length=50)
     hospital        = models.ForeignKey('Hospital',on_delete=models.CASCADE,null=True)
+    
+    def __str__(self):
+    	return self.department_name
 
 class Room(models.Model):
     hospital = models.ForeignKey('Hospital',on_delete=models.CASCADE,null=True)
@@ -51,7 +54,6 @@ class Appointment(models.Model):
         return doctor
     class Meta:
         ordering = ['startTime']
-
 
 
 
@@ -78,6 +80,8 @@ class Schedule(models.Model):
 class Patient(Person):
     height = models.IntegerField(default=0)
     weight = models.FloatField(default=0)
+    def __str__(self):
+    	return self.user.username
 
 
 
@@ -91,6 +95,8 @@ class StaffMember(Person):
     department     = models.ForeignKey('Department', on_delete=models.CASCADE,null=True)
     patients       = models.ManyToManyField(Patient)
     # Abstract class
+    def __str__(self):
+    	return self.user.username
 
 class HospitalManager(StaffMember):
     pass
