@@ -1,0 +1,90 @@
+body{
+  font:15px/1.5 Arial,Helvetica,sans-serif;
+  padding:0;
+  margin:0;
+  background-color:white;
+}
+
+header {
+  color:rgb(85, 182, 199);
+}
+
+.nav-link {
+  text-transform: uppercase;
+}
+
+.nav-link:hover {
+  color:rgb(85, 182, 199);
+}
+
+.main-nav{
+  float :right;
+  background-color: black;
+}
+
+.entry{
+  text-align: center;
+}
+
+.brand {
+  color: black;
+  background-image: url(bg.jpeg);
+  background-position: bottom right;
+  background-size: 100%;
+  background-repeat: no-repeat, repeat;
+  padding: 100px;
+  border-bottom: 2px black solid;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.entryTitle {
+  padding: 10px 0px;
+  font-style: italic;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.input-group {
+  margin: 15px auto;
+  display: grid;
+  width: 60%;
+  max-width: 360px;
+}
+
+footer {
+  margin-top: 200px;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.w-20 {
+  width: 20%;
+}
+
+.w-60 {
+  width: 60%;
+}
+
+.form-title {
+  margin: 1em;
+  text-align:center;
+  font-size: 1rem;
+}
+
+.card-img-top {
+  object-fit: cover;
+  max-height: 200px;
+}
+
+.professional-information-form {
+  margin: auto;
+  width: 60%;
+}
+
+.form-floating {
+  margin: auto;
+  width: 80%;
+}

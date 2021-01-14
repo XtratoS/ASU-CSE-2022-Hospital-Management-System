@@ -1,0 +1,17 @@
+.addinfoform{
+    width:80%;
+    text-align:center;
+    border:5 px black solid;
+    padding:0 20px 0 20px;
+}
+
+.labelsofinfo{
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.headofinfo{
+    font-weight: bold;
+    font-style: italic;
+    text-decoration: underline;
+}

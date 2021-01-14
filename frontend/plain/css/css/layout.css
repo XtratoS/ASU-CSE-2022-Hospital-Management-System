@@ -1,0 +1,120 @@
+/*Global*/
+.Container{
+    widows: 80%;
+    margin:auto;
+    overflow:hidden;
+}
+
+body{
+    font:15px/1.5 Arial,Helvetica,sans-serif;
+    font:black;
+    padding:0;
+    margin:0;
+    background-color:white;
+}
+
+header {
+    color:rgb(85, 182, 199);
+    padding-top:0;
+    min-height:100px;
+    border-bottom:black 3px solid;
+}
+
+header.im.img{
+    width:500px ;
+    height:350px ;
+    border:5px white solid;
+    background-image:url(../imag.jpg.jpeg);
+  
+}
+
+header a {
+    color:white;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size:16px;
+}
+
+header ul{
+    margin:0;
+    padding:0;
+    float:right;
+}
+
+header li{
+    float:left;
+    display:inline;
+    padding:0 20px 0 20px;
+}
+
+header #brand  h1 {
+    float :left;
+    margin:0;
+    padding:0;
+}
+
+header nav{
+    float :right;
+    background-color:black;
+   /* background-color:rgb(14, 156, 199);*/
+    height: 200 px;
+    width:50 px;
+    margin:0 ;
+    overflow: hidden;
+}
+
+body #entry{
+    text-align: center;
+}
+
+#showcase {
+    min-height:200px;
+    background-image: url ('');
+}
+
+/*form #box{
+    text-decoration: bold;
+    text-decoration-color: white;
+}
+
+.container h1{
+    font-family:'Times New Roman', Times, serif;
+    font-weight: bold;
+    color:black;
+    margin:0;
+}
+
+#brand {
+    background-color:rgb(166, 219, 255);
+}*/
+
+#entry p {
+    font-style: italic;
+    font-weight: bold;
+    font-size: larger;
+}
+
+header #container {
+    color:black;
+}
+
+#example1 {
+    background-image: url(../imag.jpg.jpeg);
+    background-position: right bottom;
+    background-size: 100%;
+    background-repeat: no-repeat, repeat;
+    padding: 100px;
+    border-bottom: 5px black solid;
+}
+
+#example2 {
+    background-image: url(../blueb.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding:50px;
+    border: 5px solid silver;
+}
+
+#head1 {
+    padding:10px;
+}

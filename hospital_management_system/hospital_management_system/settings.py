@@ -26,7 +26,7 @@ SECRET_KEY = '_wm29k3y27#zwa+549@*wa9l62tt@ejfg7a15t*ss6-+!w(a$x'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["asu-cse-22-hsptl-mng-sys.herokuapp.com", "127.0.0.1"]
 
 
 # Application definition
@@ -86,6 +86,15 @@ TEMPLATES = [
         },
     },
 ]
+
+STATIC_URL = '/staticfiles/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'system-frontend', 'build', 'static'),
+)
 
 WSGI_APPLICATION = 'hospital_management_system.wsgi.application'
 
@@ -153,6 +162,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+<<<<<<< HEAD
 STATIC_URL = '/staticfiles/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
@@ -161,3 +171,6 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
     os.path.join(BASE_DIR, 'system-frontend', 'build', 'static'),
 )
+=======
+# STATIC_URL = '/static/'
+>>>>>>> origin/frontend

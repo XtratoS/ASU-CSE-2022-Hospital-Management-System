@@ -1,0 +1,1 @@
+web: cd hospital_management_system && gunicorn hospital_management_system.wsgi

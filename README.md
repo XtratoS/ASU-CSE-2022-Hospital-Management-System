@@ -11,3 +11,4 @@ https://docs.google.com/document/d/1MZNZ-5lhil49dlG5KFfYhevKaJS3sZgMC2Heb6HCH9A/
 ### TODO
 - We need to create a unique employee id for every employee
 - Create user groups and permissions: https://docs.djangoproject.com/en/3.1/topics/auth/default/
+- Professional information in the employee dashboard
