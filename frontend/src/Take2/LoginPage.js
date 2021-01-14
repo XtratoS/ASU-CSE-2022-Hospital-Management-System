@@ -1,11 +1,20 @@
 import { Component } from 'react';
 import {Link} from 'react-router-dom';
 import Input from './Input';
+import API from './API';
 
 class LoginPage extends Component {
     state = {
         user: '',
-        password: ''
+        password: '',
+        error: '',
+        loggedIn: false
+    }
+
+    componentDidMount() {
+        if (localStorage.getItem('key')) {
+            this.setState({loggedIn: true})
+        }
     }
 
     updateState = (newData) => {
@@ -19,22 +28,28 @@ class LoginPage extends Component {
     }
 
     attemptLogin = () => {
-        // LOGIN
-        console.log(JSON.stringify(this.state))
+        API.getLoginToken(this.state.user, this.state.password).then((key) => {
+            if (key === null) {
+                this.setState({error: 'Incorrect account details'})
+            } else {
+                localStorage.setItem('key', key)
+                this.setState({user: '', password: '', loggedIn: 'true'});
+            }
+        });
     }
 
     render() {
-        return (
+        return (this.state.loggedIn || (
             <div className="container-sm w-60">
                 <div className="form-title">
                     Please enter your login information below
                 </div>
                 <div id="error-alert-wrapper">
-                    {this.state.error && <div className="alert alert-danger p-1">{this.state.error}</div>}
+                    {this.state.error && <div className="alert alert-danger p-1 text-center">{this.state.error}</div>}
                 </div>
                 <Input
-                    placeholder="Email Address"
-                    type="email"
+                    placeholder="Username"
+                    type="text"
                     name="user"
                     updateParent={this.updateState}
                 />
@@ -44,7 +59,7 @@ class LoginPage extends Component {
                     name="password"
                     updateParent={this.updateState}
                 />
-                <div className="input-group">
+                <div className="text-center">
                     <button className="btn btn-primary" type="button" onClick={this.attemptLogin}>Log in</button>
                 </div>
                 <div className="text-center">Don't have an account?
@@ -52,7 +67,7 @@ class LoginPage extends Component {
                         <span className="m-2">Register here</span>
                     </Link>
                 </div>
-            </div>
+            </div>)
         )
     }
 }

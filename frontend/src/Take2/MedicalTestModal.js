@@ -11,7 +11,7 @@ function MedicalTestModal(props) {
                     <form>
                         <div className="mb-3">
                             <label htmlFor="recipient-name" className="col-form-label">Patient Name:</label>
-                            <input type="text" className="form-control" id="recipient-name" disabled value="Mariam"/>
+                            <input type="text" className="form-control" id="recipient-name" disabled value={props.patient.name}/>
                         </div>
                         <div className="form-check">
                             <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" />

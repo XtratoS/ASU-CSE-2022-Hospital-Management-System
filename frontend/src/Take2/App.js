@@ -9,28 +9,31 @@ import Footer from './Footer';
 import Services from './Services';
 import Departments from './Departments';
 import DoctorDashboard from './DoctorDashboard'
+import PatientDashboard from './PatientDashboard'
 import SubHeader from './SubHeader';
 import Account from './Account';
+import EmployeeSalaries from './EmployeeSalaries';
+import FrontDesk from './FrontDesk'
+// import EmployeeSalaries from './EmployeeSalaries';
 // import FrontDeskDashboard from './FrontDeskDashboard'
 
 function App() {
   return (
     <div className="container-sm">
       <Header/>
-      <Route
+      {/* <Route
         exact path={`/`}
         render={()=>(
           <div>
             <Showcase/>
           </div>
         )}
-      />
-
+      /> */}
       <Route exact path={`/account`}>
         <Account/>
       </Route>
 
-      <Route exact path={`/login`}>
+      <Route exact path={`/`}>
         <Showcase/>
         <LoginPage/>
       </Route>
@@ -44,6 +47,10 @@ function App() {
         <DoctorDashboard/>
       </Route>
 
+      <Route path={`/patient`}>
+        <PatientDashboard/>
+      </Route>
+
       <Route path={`/services`}>
         <Services/>
       </Route>
@@ -52,8 +59,12 @@ function App() {
         <Departments/>
       </Route>
 
+      <Route path={`/finance`}>
+        <EmployeeSalaries/>
+      </Route>
+
       <Route path={`/frontdesk`}>
-        {/* <FrontDeskDashboard/> */}
+        <FrontDesk/>
       </Route>
 
       <Footer/>

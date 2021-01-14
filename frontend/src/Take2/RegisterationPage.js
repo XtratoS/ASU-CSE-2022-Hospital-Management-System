@@ -107,11 +107,11 @@ class RegisterationForm extends Component {
                     required={true}
                     updateParent={this.updateState}
                 />
-                <div className="input-group">
+                <div className="text-center">
                     <button className="btn btn-primary" type="button" onClick={this.attemptRegister}>Register</button>
                 </div>
                 <div className="text-center">Already have an account?
-                    <Link to="/login">
+                    <Link to="/">
                         <span className="m-2">Login here</span>
                     </Link>
                 </div>

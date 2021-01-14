@@ -57,7 +57,7 @@ class DoctorDashboard extends Component{
 
   render(){
     return(
-      <div className= "App">
+      <div className= "text-center">
         <DoctorDashboardSidebar/>
            <Route path='/doctor/account' render={()=>{
             return(
@@ -69,7 +69,7 @@ class DoctorDashboard extends Component{
           }}/>  
           <Route path='/doctor/schedules' render={()=>{
             return(
-              <div className="schedule pt-4 w-60 text-center m-auto">
+              <div className="schedule pt-4 w-40 text-center m-auto">
                 <h1 className="text-center">Schedule</h1>
                 <Scheduleitem items={this.state.items} deleteitem={this.deleteitem} />
                 <Addschdule addItem={this.addItem}/>

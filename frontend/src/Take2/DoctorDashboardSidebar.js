@@ -11,7 +11,7 @@ class DoctorDashboardSidebar extends Component{
                <li className="sidebar-li"><Link to="/doctor/schedules">My Schedules</Link></li>
                <li className="sidebar-li"><Link to="/doctor/patients">Patients</Link></li>
                {/* <li className="sidebar-li"><Link to="/doctor/requset">Request test</Link></li> */}
-               <li className="sidebar-li"><Link to="/logout">Logout</Link></li>
+               <li className="sidebar-li"><Link to="/">Logout</Link></li>
             </ul>
          </div>
       )

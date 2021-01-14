@@ -12,9 +12,16 @@ class Addinfo extends Component {
     }
 
     componentDidMount() {
+        this._isMounted = true;
         API.getProfessionalInformation(this.props.id).then((response)=>{
-            this.setState(response.information);
+            if (this._isMounted) {
+                this.setState(response.information);
+            }
         });
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     myChangeHandler = (event) => {
@@ -30,19 +37,19 @@ class Addinfo extends Component {
 
     render() {
         return(
-            <form className="professional-information-form row g-3">
+            <form className="w-40 m-auto row g-3">
                 <div className="col-12">Fill your information here:</div>
                 <div className="col-12">
-                    <input className="form-control" type="text" placeholder="Name" value={this.state.name} onChange={this.myChangeHandler} />
+                    <input className="form-control" type="text" placeholder="Name" value={this.state.name || ''} onChange={this.myChangeHandler} />
                 </div>
                 <div>
-                    <input className="form-control" type="text" placeholder="Age" value={this.state.age} onChange={this.myChangeHandler} />
+                    <input className="form-control" type="text" placeholder="Age" value={this.state.age || ''} onChange={this.myChangeHandler} />
                 </div>
                 <div>
-                    <input className="form-control" type="text" placeholder="Previous Exp" value={this.state.previous} onChange={this.myChangeHandler} />
+                    <input className="form-control" type="text" placeholder="Previous Exp" value={this.state.previous || ''} onChange={this.myChangeHandler} />
                 </div>
                 <div>
-                    <input className="form-control" type="text" placeholder="Graduation Year" value={this.state.graduationyear} onChange={this.myChangeHandler} />
+                    <input className="form-control" type="text" placeholder="Graduation Year" value={this.state.graduationyear || ''} onChange={this.myChangeHandler} />
                 </div>
                 <div className="">
                     <button className="btn btn-primary" onClick={this.onSubmitForm}>Submit</button>

@@ -10,12 +10,12 @@ class Departments extends Component {
         departments: [],
         loaded: false
     }
-
+    
     componentDidMount = () => {
         this._isMounted = true;
-        API.getDepartments().then((response) => {
+        API.getDepartments().then((departments) => {
             if (this._isMounted) {
-                this.setState({loaded: true, departments: response});
+                this.setState({loaded: true, departments: departments});
             }
         });
     }
@@ -47,7 +47,7 @@ class Departments extends Component {
                         </div>
                     </Route>
                     {this.state.departments.map((department) => (
-                        <Route key={department.id} exact path={`/departments/${department.id}`}>
+                        <Route key={department.id} exact path={`/departments/${department.department_name}`}>
                             <div>
                                 <Department
                                     department={department}
