@@ -1,16 +1,17 @@
 import React from 'react'
 import './Schedule.css'
-const Scheduleitem =(props) =>{
+
+const Scheduleitem = (props) =>{
    const {items , deleteitem} = props;
    const lenghth=items.length;
-
+   var i = 0;
    const Listitem = lenghth ? items.map(item =>{
       return(
-         <div key={item.starttime}>
+         <div key={i++}>
                <span className="date">{item.date}</span>
                <span className="time">{item.starttime}</span>
                <span className="time">{item.endtime}</span>
-               <span className="action" onClick={() =>deleteitem(item.starttime)}>&times;</span>
+               <span className="action" onClick={deleteitem}>&times;</span>
          </div>
       )
    }) :(<p>there is no item to show</p>)

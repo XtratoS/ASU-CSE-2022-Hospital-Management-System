@@ -1,10 +1,10 @@
 import React , {Component} from 'react';
- import {BrowserRouter , Route, useRouteMatch} from 'react-router-dom';
- import Doctor from './components/doctor/doctor'
- import Form from "./components/form";
- import Scheduleitem from './components/Schedule/schedule-items'
- import Addschdule from './components/Schedule/addschedule'
- class Alldoctors extends Component{
+import {BrowserRouter , Route, useRouteMatch} from 'react-router-dom';
+import Doctor from './components/doctor/doctor'
+import Form from "./components/form";
+import Scheduleitem from './components/Schedule/schedule-items'
+import Addschdule from './components/Schedule/addschedule'
+class Alldoctors extends Component{
 
   state = {
     fields: {}

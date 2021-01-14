@@ -1,7 +1,7 @@
 .sidebar{
    position: fixed; 
    left: 0;
-   width: 300px;
+   width: 20%;
    height: 100%;
    background:#4b4276;
    font-family: 'Josefin Sans',sans-serif;
@@ -25,22 +25,23 @@
    user-select:none;
    text-transform: uppercase;
 }
+
 .sidebar .sidebar-ul a{
    display:block;
    height:100%;
-   width:100%;
    line-height: 65px;
    font-size: 18px;
    color: #fff;
-   padding-left: 40px;
+   padding-left: 20px;
    box-sizing: border-box;
    border-top: 1px solid rgba(255, 255, 255, .1);
    border-bottom: 1px solid black;
-   
 }
+
 .sidebar-ul li:hover a{
    padding-left: 50px;
 }
+
 .sidebar .sidebar-ul a i{
    margin-right: 16px;
 }

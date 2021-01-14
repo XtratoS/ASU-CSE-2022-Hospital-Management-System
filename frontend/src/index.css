@@ -73,3 +73,18 @@ footer {
   text-align:center;
   font-size: 1rem;
 }
+
+.card-img-top {
+  object-fit: cover;
+  max-height: 200px;
+}
+
+.professional-information-form {
+  margin: auto;
+  width: 60%;
+}
+
+.form-floating {
+  margin: auto;
+  width: 80%;
+}

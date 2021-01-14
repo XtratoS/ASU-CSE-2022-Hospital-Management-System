@@ -10,13 +10,14 @@ class Bookappointment extends Component{
             { text: 'Lab test', id: '3' },
         ];
     }
-    render(){
-        return(
+    
+    render() {
+        return (
             <div>
-            <button>Click to Submit</button>
-            <ListViewComponent id='list' dataSource={this.data} showCheckBox={true} headerTitle='Pick An Appointment' showHeader={true}></ListViewComponent>
+                <button>Click to Submit</button>
+                <ListViewComponent id='list' dataSource={this.data} showCheckBox={true} headerTitle='Pick An Appointment' showHeader={true}></ListViewComponent>
             </div>
-            );            
+        );
     }
 }
 export default Bookappointment;

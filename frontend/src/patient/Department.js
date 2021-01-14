@@ -3,16 +3,17 @@ import react, {Component} from 'react';
 class Department extends Component {
 
     state = {
-        department:''
+        department:'-'
     }
 
     render() {
         return (
             <form>
-                <select value={"this.state.department"}>
-                    <option value="a"></option>
-                    <option value="b"></option>
-                    <option value="c"></option>
+                <select value={this.state.department}>
+                    <option value="-" disabled>Please Select</option>
+                    <option value="a">Dep A</option>
+                    <option value="b">Dep B</option>
+                    <option value="c">Dep C</option>
                 </select>
             </form>
         );
